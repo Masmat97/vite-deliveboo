@@ -26,13 +26,12 @@ export default {
 
 <template>
 
-  <!-- <h1>Apphome</h1>
+  <h1>Apphome</h1>
   <div v-for="restaurant in this.restaurants.data">
-  {{ restaurant.name }}
-  </div> -->
 
+    {{ restaurant.name }}
 
-
+  </div>
 </template>
 
 <style></style>
