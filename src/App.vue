@@ -1,12 +1,14 @@
 <script>
+import AppHeader from './components/AppHeader.vue';
+import AppHome from './views/AppHome.vue';
 
-import HelloWorld from './components/HelloWorld.vue';
 
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    AppHeader,
+    AppHome
   },
 
 }
@@ -16,7 +18,8 @@ export default {
 
 <template>
 
-  <HelloWorld />
+  <AppHeader />
+  <AppHome />
 
 
 </template>
