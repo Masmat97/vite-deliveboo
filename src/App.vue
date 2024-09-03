@@ -31,11 +31,8 @@ export default {
 <template>
 
   <AppHeader />
-  <<<<<<< HEAD <AppHome />
-  =======
   <router-view />
 
-  >>>>>>> e7ee8e9bde3a5dc9a04122c41ef3859d94a4c7e7
 
 
 </template>
