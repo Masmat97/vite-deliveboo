@@ -8,14 +8,16 @@ export default {
   data() {
     return {
       base_url: 'http://localhost:8000/',
-      restaurant: ''
+      restaurants: ''
     }
   },
   mounted() {
     const url = `${this.base_url}api/restaurants`
     axios.get(url).then(response => {
       console.log(response.data);
-      this.restaurant = response.data.restaurant
+      this.restaurants = response.data.restaurants
+      console.log(this.restaurants);
+
     })
   }
 }
@@ -25,7 +27,11 @@ export default {
 <template>
 
   <h1>Apphome</h1>
+  <div v-for="restaurant in this.restaurants.data">
 
+    {{ restaurant.name }}
+
+  </div>
 </template>
 
 <style></style>
