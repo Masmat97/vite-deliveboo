@@ -3,7 +3,6 @@ import AppHeader from './components/AppHeader.vue';
 import AppHome from './views/AppHome.vue';
 
 
-
 export default {
   name: 'App',
   components: {
@@ -11,7 +10,20 @@ export default {
     AppHome
   },
 
-}
+  data() {
+    return {
+
+    }
+  },
+
+
+  mounted() {
+
+
+  }
+
+
+};
 
 </script>
 
@@ -19,7 +31,11 @@ export default {
 <template>
 
   <AppHeader />
-  <AppHome />
+  <<<<<<< HEAD <AppHome />
+  =======
+  <router-view />
+
+  >>>>>>> e7ee8e9bde3a5dc9a04122c41ef3859d94a4c7e7
 
 
 </template>

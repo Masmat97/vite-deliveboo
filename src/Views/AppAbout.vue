@@ -15,8 +15,6 @@ export default {
 
 <!-- HTML -->
 <template>
-    <h1>About Me</h1>
-
     <div class="card m-4">
         <col-6 class="p-4">
             <h5>About us</h5>
@@ -32,7 +30,7 @@ export default {
         </col-6>
         <col-6 class="d-flex justify-content-center align-items-center m-0 p-4">
             <div class="card-img">
-                <img src="../assets/kira_ed_io.jpghttps://as2.ftcdn.net/v2/jpg/03/16/12/51/1000_F_316125188_FYs3RbaUQ6gGwom3sfqSvgt2QGw3fKol.jpg"
+                <img src="https://as2.ftcdn.net/v2/jpg/03/16/12/51/1000_F_316125188_FYs3RbaUQ6gGwom3sfqSvgt2QGw3fKol.jpg"
                     alt="">
             </div>
         </col-6>
