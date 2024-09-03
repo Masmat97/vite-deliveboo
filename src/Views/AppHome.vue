@@ -1,26 +1,13 @@
 <script>
-import AppRestaurants from '../components/AppRestaurants.vue';
-
-
-
 export default {
-    name: 'AppHome',
-    components: {
-        AppRestaurants
-    },
-
+    name: "AppHome"
 }
-
 </script>
 
-
 <template>
-
-    <AppRestaurants />
-
-
-
-
+    <section>
+        <h1 class="mt-5 mb-3">Homepage</h1>
+    </section>
 </template>
 
-<style scoped></style>
+<style></style>
