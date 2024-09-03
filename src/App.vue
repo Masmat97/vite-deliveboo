@@ -1,7 +1,6 @@
 <script>
 
 import AppHeader from './components/AppHeader.vue';
-import HelloWorld from './components/AppHeader.vue';
 
 
 export default {
