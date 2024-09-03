@@ -1,22 +1,40 @@
 <script>
 
-import HelloWorld from './components/HelloWorld.vue';
+import AppHeader from './components/AppHeader.vue';
+import HelloWorld from './components/AppHeader.vue';
 
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+
+  components:{
+    AppHeader,
+    
   },
 
-}
+  data() {
+    return {
+   
+    }
+  },
+
+
+  mounted() {
+
+  
+  }
+
+
+};
 
 </script>
 
 
 <template>
 
-  <HelloWorld />
+  <AppHeader />
+  <router-view/>
+
 
 
 </template>
