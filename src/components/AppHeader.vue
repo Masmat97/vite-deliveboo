@@ -1,26 +1,29 @@
-<script>
-import axios from 'axios';
-
-
-export default {
-  name: 'AppHeader',
-
-  data() {
-
-  },
-  mounted() {
-
-
-  }
-}
-
-</script>
-
 <template>
-
-  <h1>header</h1>
-
-  
+  <header>
+    <h1>Header</h1>
+    
+  </header>
 </template>
 
-<style></style>
+<script>
+export default {
+  name: 'AppHeader',
+  data() {
+    return {
+      
+    };
+  },
+  mounted() {
+    
+  }
+}
+</script>
+
+<style scoped>
+
+header {
+  background-color: #f3f3f3; 
+  padding: 10px; 
+  text-align: center; 
+}
+</style>
