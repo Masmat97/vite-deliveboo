@@ -40,8 +40,7 @@ export default {
                     <div class="card-body">
 
                         <h5 class="card-title">{{ restaurant.name }}</h5>
-                        <a href="#" class="btn btn-primary">Visualizza il menu</a>
-
+                        <router-link :to="{ name: 'restaurant', params: { id: restaurant.id } }">View Menù</router-link>
                     </div>
 
                 </div>
