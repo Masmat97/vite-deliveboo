@@ -2,14 +2,14 @@
 import axios from 'axios';
 import AppRestaurants from '../components/AppRestaurants.vue';
 export default {
-    name: "AppHome",
-    components: {
-        AppRestaurants,
-    },
+  name: "AppHome",
+  components: {
+    AppRestaurants,
+  },
   data() {
     return {
       restaurants: [],
-      user: false,  
+      user: false,
     };
   },
   created() {
@@ -30,25 +30,25 @@ export default {
 </script>
 
 <template>
-    <div>
-      <header>
-        <img src="#" alt="DeliveBoo Logo" class="logo">
-        <input type="search" placeholder="Cerca ristoranti o cibo..." class="search-bar">
-        <nav>
-          <ul>
-            <li><router-link to="/">Home</router-link></li>
-            <li><router-link to="/explore">Esplora</router-link></li>
-            <li v-if="user"><router-link to="/orders">Ordini</router-link></li>
-            <li v-if="!user"><router-link to="/login">Login</router-link></li>
-            <li v-if="!user"><router-link to="/about">About</router-link></li>
-            <li v-if="!user"><router-link to="/contact">Contact</router-link></li>
+  <div>
+    <header>
+      <img src="#" alt="DeliveBoo Logo" class="logo">
+      <input type="search" placeholder="Cerca ristoranti o cibo..." class="search-bar">
+      <nav>
+        <ul>
+          <li><router-link to="/">Home</router-link></li>
+          <li><router-link to="/explore">Esplora</router-link></li>
+          <li v-if="user"><router-link to="/orders">Ordini</router-link></li>
+          <li v-if="!user"><router-link to="/login">Login</router-link></li>
+          <li v-if="!user"><router-link to="/about">About</router-link></li>
+          <li v-if="!user"><router-link to="/contact">Contact</router-link></li>
 
 
-            <li><router-link to="/cart">Carrello</router-link></li>
-          </ul>
-        </nav>
-      </header>
-      <!-- <section class="featured-restaurants">
+          <li><router-link to="/cart">Carrello</router-link></li>
+        </ul>
+      </nav>
+    </header>
+    <!-- <section class="featured-restaurants">
         <h2>Ristoranti del Momento</h2>
         <div class="restaurant-list">
           <div class="restaurant-item" v-for="restaurant in this.restaurants.data" :key="restaurant.id">
@@ -61,16 +61,13 @@ export default {
           </div>
         </div>
       </section> -->
-      
-    <AppRestaurants />
-      <footer>
-        <p>© 2024 DeliveBoo. Tutti i diritti riservati.</p>
-      </footer>
-    </div>
-  </template>
-  
 
-  <style scoped>
-  /* Add your styles here */
-  </style>
-  
+    <AppRestaurants />
+
+  </div>
+</template>
+
+
+<style scoped>
+/* Add your styles here */
+</style>
