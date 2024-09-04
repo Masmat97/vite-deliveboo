@@ -39,6 +39,11 @@ const router = createRouter({
             component: AppHome
         },
         {
+            path: '/home',
+            name: 'home',
+            component: AppHome
+        },
+        {
             path: '/about',
             name: 'about',
             component: AppAbout
@@ -57,7 +62,7 @@ const router = createRouter({
         {
             path: '/restaurants',
             name: 'restaurants',
-            component: AppRestaurants
+            component: AppHome
         },{
             path: '/restaurant/:id',
             name: 'restaurant',
