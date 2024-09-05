@@ -45,7 +45,7 @@ export default {
 }
 </script>
 <template>
-    <div class="container-fluid">
+    <div class="container-fluid mt-10">
 
         <div class="row">
 
@@ -89,9 +89,5 @@ img {
     aspect-ratio: 1;
     object-fit: cover;
     object-position: center;
-}
-
-.container-fluid {
-    padding-top: 10rem;
 }
 </style>

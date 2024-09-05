@@ -1,11 +1,3 @@
-<template>
-  <div id="app">
-    <AppHeader />
-    <router-view />
-    <AppFooter />
-  </div>
-</template>
-
 <script>
 import AppHeader from './components/AppHeader.vue';
 import AppFooter from './components/AppFooter.vue';
@@ -19,9 +11,22 @@ export default {
   }
 };
 </script>
+
+<template>
+  <div id="app">
+
+    <body>
+      <AppHeader />
+      <router-view />
+      <AppFooter />
+    </body>
+  </div>
+</template>
+
+
 <style scoped>
 /* Stili globali possono andare qui, e.g., reset di margini e padding */
-body,
+
 html {
   margin: 0;
   padding: 0;

@@ -4,7 +4,7 @@ export default {
     name: "not_found",
     data() {
         return {
-           
+
         }
 
     }
@@ -15,28 +15,28 @@ export default {
 
 <!-- HTML -->
 <template>
->
-<p class="mt-5"><b>ERROR 404 PAGE NOT FOUND</b>
-</p>
+    >
+    <p class="mt-5"><b>ERROR 404 PAGE NOT FOUND</b>
+    </p>
 
 
-<div>
-<button>
-    <router-link :to="{ name:'RestaurantsCard'}" class="text-white">Torna a Restaurants</router-link>
-</button>
+    <div>
+        <button>
+            <router-link :to="{ name: 'RestaurantsCard' }" class="text-white">Torna a Restaurants</router-link>
+        </button>
 
-</div>
+    </div>
 </template>
 
 
 <!-- CSS -->
 <style scoped>
-p{
+p {
     font-size: 5rem;
     padding: 2rem;
 }
 
-button{
+button {
     background-color: rgb(24, 55, 255);
 }
 </style>
