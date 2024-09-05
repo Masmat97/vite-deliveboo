@@ -1,7 +1,5 @@
 <script>
 
-import AppHome from '../Views/AppHome.vue';
-
 export default {
     name: "AppFooter",
     components: {
@@ -22,22 +20,22 @@ export default {
 
                     <div class="text-white d-flex flex-row justify-content-around">
                         <div class="d-flex flex-column p-2">
-                            <a href="">Scopri DeliveBoo</a>
-                            <a href="">Chi siamo</a>
-                            <a href="">Ristornati</a>
+                            <span>DELIVEBOO</span>
+                            <router-link to="/about">Chi siamo</router-link>
+                            <router-link to="/home">Ristoranti</router-link>
                         </div>
 
                         <div class="d-flex flex-column p-2">
-                            <a href="">Note Legali</a>
-                            <a href="">Termini e condizioni</a>
-                            <a href="">Informativa sulla privacy</a>
-                            <a href="">Cookies</a>
+                            <span>NOTE LEGALI</span>
+                            <router-link to="/terms">Termini e condizioni</router-link>
+                            <router-link to="/privacy">informativa sulla privacy</router-link>
+                            <router-link to="/cookies">Cookies</router-link>
                         </div>
 
                         <div class="d-flex flex-column p-2">
-                            <a href="">Help</a>
-                            <a href="">FAQ</a>
-                            <a href="">Contatti</a>
+                            <span>HELP</span>
+                            <router-link to="/FAQ">FAQ</router-link>
+                            <router-link to="/contact">Contact</router-link>
                         </div>
                     </div>
 
@@ -63,7 +61,7 @@ a {
 }
 
 a:hover {
-    font-size: 20px;
+    opacity: 0.5;
 }
 
 i {
