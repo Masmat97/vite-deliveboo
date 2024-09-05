@@ -1,33 +1,48 @@
 <script>
 import axios from 'axios';
 
-
 export default {
-    name: 'AppRestaurants',
+name: 'AppRestaurants',
 
-    data() {
-        return {
-            base_url: 'http://localhost:8000/',
-            restaurants: ''
-        }
-    },
-    mounted() {
+data() {
+    return {
+        base_url: 'http://localhost:8000/',
+        restaurants: '',
+        searchType: '',
+        filteredRestaurants: ''
+     }
+},
+ mounted() {
         const url = `${this.base_url}api/restaurants`
         axios.get(url).then(response => {
             console.log(response.data);
             this.restaurants = response.data.restaurants
+            this.filteredRestaurants = this.restaurants.data
             console.log(this.restaurants);
 
         })
+    },
+methods: {
+    searchRestaurants() {
+        const url = `${this.base_url}api/types/restaurant/${this.searchType}`
+        axios.get(url).then(response => {
+            console.log(response.data);
+            this.filteredRestaurants = response.data.restaurants
+        })
+     }
     }
 }
-
 </script>
-
 <template>
     <div class="container">
         <div class="row">
-            <div v-for="restaurant in this.restaurants.data" class="col-3 mt-5">
+            <div class="col-12">
+                <input type="text" v-model="searchType" placeholder="Cerca per tipo">
+                <button @click="searchRestaurants">Cerca</button>
+            </div>
+        </div>
+        <div class="row">
+            <div v-for="restaurant in filteredRestaurants" class="col-3 mt-5">
                 <div class="card" style="width: 18rem;">
 
                     <div v-if="restaurant.image.startsWith('http')">
@@ -48,6 +63,7 @@ export default {
         </div>
     </div>
 </template>
+
 
 <style scoped>
 img {
