@@ -66,7 +66,7 @@ export default {
                             <img :src="restaurant.image" class="card-img-top" alt="">
                         </div>
                         <div v-else>
-                            <img :src="url + 'storage/' + restaurant.image" class="card-img-top" alt="">
+                            <img :src="base_url + 'storage/' + restaurant.image" class="card-img-top" alt="">
                         </div>
 
                         <div class="card-body">
