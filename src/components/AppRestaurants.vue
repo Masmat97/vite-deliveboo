@@ -90,4 +90,7 @@ img {
     object-fit: cover;
     object-position: center;
 }
+.container{
+    padding-top: 10rem;
+}
 </style>
