@@ -80,7 +80,7 @@ export default {
             </div>
 
             <div class="col-xl-10 col-lg-9 col-md-8 d-flex flex-wrap">
-                <div v-for="restaurant in filteredRestaurants" class="col-xl-3 col-lg-4 col-md-6 mt-5">
+                <div v-for="restaurant in filteredRestaurants" class="col-xl-3 col-lg-3 col-md-6 mt-5">
                     <div class="card mx-3">
 
                         <div v-if="restaurant.image.startsWith('http')">
@@ -98,7 +98,9 @@ export default {
                             </router-link>
 
                             <p>
-                                <span v-for="type in restaurant.types"> {{ type.name }} &nbsp</span>
+                            <ul class="d-flex gap-3 flex-wrap">
+                                <li v-for="type in restaurant.types">{{ type.name }}</li>
+                            </ul>
                             </p>
                         </div>
                     </div>
@@ -130,6 +132,10 @@ export default {
 </template>
 
 <style scoped>
+.card {
+    height: 100%;
+}
+
 .page-link {
     color: #bb2d3b;
 }
@@ -139,5 +145,13 @@ img {
     aspect-ratio: 1;
     object-fit: cover;
     object-position: center;
+}
+
+ul {
+    padding: 0;
+}
+
+li {
+    list-style: none;
 }
 </style>
