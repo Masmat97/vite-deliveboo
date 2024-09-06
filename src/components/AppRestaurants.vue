@@ -52,11 +52,12 @@ export default {
 
         <div class="row">
 
-            <div class="col-2">
+            <div class="col-2 border ">
                 <p>Filtra per tipologia:</p>
-                <div v-for="type in this.types" :key="type">
-                    <input type="checkbox" :id="type" :value="type" v-model="selectedTypes">
-                    <label :for="type">{{ type.name }}</label>
+                <div v-for="type in this.types" :key="type" class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" :id="type" :value="type"
+                        v-model="selectedTypes">
+                    <label class="form-check-label ms-3" :for="type">{{ type.name }}</label>
                 </div>
                 <button @click="searchRestaurants">Cerca</button>
 
@@ -76,8 +77,9 @@ export default {
                         <div class="card-body">
 
                             <h5 class="card-title">{{ restaurant.name }}</h5>
-                            <router-link :to="{ name: 'restaurant', params: { name: restaurant.name } }">View
-                                Menù</router-link>
+                            <router-link :to="{ name: 'restaurant', params: { id: restaurant.id } }">View
+                                Menù
+                            </router-link>
                         </div>
                     </div>
                 </div>
