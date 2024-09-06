@@ -68,10 +68,8 @@ export default {
 
 <template>
     <div class="container-fluid">
-
         <div class="row">
-
-            <div class="col-2 border mt-5">
+            <div class="col-xl-2 col-lg-3 col-md-4 border mt-5">
                 <p class="my-3 fw-bold">Filtra per tipologia:</p>
                 <div v-for="type in this.types" :key="type" class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" :id="type" :value="type"
@@ -81,9 +79,9 @@ export default {
                 <button type="button" class="btn btn-danger my-3" @click="searchRestaurants">Cerca</button>
             </div>
 
-            <div class="col-10 d-flex flex-wrap">
-                <div v-for="restaurant in filteredRestaurants" class="col-3 mt-5">
-                    <div class="card" style="width: 18rem;">
+            <div class="col-xl-10 col-lg-9 col-md-8 d-flex flex-wrap">
+                <div v-for="restaurant in filteredRestaurants" class="col-xl-3 col-lg-4 col-md-6 mt-5">
+                    <div class="card mx-3">
 
                         <div v-if="restaurant.image.startsWith('http')">
                             <img :src="restaurant.image" class="card-img-top" alt="">
@@ -108,7 +106,7 @@ export default {
             </div>
         </div>
         <div class="row">
-            <div class="col d-flex justify-content-center">
+            <div class="col-xl-12 col-lg-12 col-md-12 d-flex justify-content-center">
 
                 <div class="pagination m-3 d-flex align-items-center gap-3">
 
