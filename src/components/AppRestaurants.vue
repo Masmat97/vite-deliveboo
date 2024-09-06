@@ -10,7 +10,9 @@ export default {
             restaurants: '',
             types: [], // add more types as needed
             selectedTypes: [],
-            filteredRestaurants: ''
+            filteredRestaurants: '',
+            currentPage: 1, // add this to keep track of the current page
+            totalPages: 0, // add this to store the total number of pages
         }
     },
     mounted() {
@@ -19,18 +21,18 @@ export default {
     },
     methods: {
         getRestaurants() {
-            const url = `${this.base_url}api/restaurants`
+            const url = `${this.base_url}api/restaurants?page=${this.currentPage}`
             axios.get(url).then(response => {
                 this.restaurants = response.data.restaurants
                 this.filteredRestaurants = this.restaurants.data
-                console.log('Ristororanti' + this.restaurants);
+                this.totalPages = response.data.restaurants.last_page // get the total number of pages
+                console.log(response);
 
             })
         },
         getTypes() {
             axios.get(`${this.base_url}api/types`).then(response => {
                 this.types = response.data.types;
-                console.log(response.data.types);
 
             })
         },
@@ -39,28 +41,44 @@ export default {
             const params = {
                 types: this.selectedTypes.map(type => type.name).join(',')
             }
-            axios.get(url, { params }).then(response => {
-                console.log(response.data); // Add this line
-                this.filteredRestaurants = response.data.restaurants
-            })
+
+            if (this.selectedTypes.length == 0) {
+                this.getRestaurants()
+            } else {
+                axios.get(url, { params }).then(response => {
+                    this.filteredRestaurants = response.data.restaurants
+                })
+            }
+        },
+        nextPage() {
+            if (this.currentPage < this.totalPages) {
+                this.currentPage++
+                this.getRestaurants()
+            }
+        },
+        prevPage() {
+            if (this.currentPage > 1) {
+                this.currentPage--
+                this.getRestaurants()
+            }
         }
     }
 }
 </script>
+
 <template>
     <div class="container-fluid">
 
         <div class="row">
 
-            <div class="col-2 border ">
-                <p>Filtra per tipologia:</p>
+            <div class="col-2 border mt-5">
+                <p class="my-3 fw-bold">Filtra per tipologia:</p>
                 <div v-for="type in this.types" :key="type" class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" :id="type" :value="type"
                         v-model="selectedTypes">
                     <label class="form-check-label ms-3" :for="type">{{ type.name }}</label>
                 </div>
-                <button @click="searchRestaurants">Cerca</button>
-
+                <button type="button" class="btn btn-danger my-3" @click="searchRestaurants">Cerca</button>
             </div>
 
             <div class="col-10 d-flex flex-wrap">
@@ -82,18 +100,42 @@ export default {
                             </router-link>
 
                             <p>
-                                <span v-for="type in restaurant.types"> -{{ type.name }}</span>
+                                <span v-for="type in restaurant.types"> {{ type.name }} &nbsp</span>
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col d-flex justify-content-center">
+
+                <div class="pagination m-3 d-flex align-items-center gap-3">
+
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item"><span class="page-link" @click="prevPage"><i
+                                        class="fa-solid fa-chevron-left"></i></span></li>
+
+                            <li class="page-item"><span class="page-link">Page {{ currentPage }} of {{ totalPages
+                                    }}</span>
+                            </li>
+                            <li class="page-item"><span class="page-link" @click="nextPage"><i
+                                        class="fa-solid fa-chevron-right"></i></span></li>
+                        </ul>
+                    </nav>
+
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
-
 <style scoped>
+.page-link {
+    color: #bb2d3b;
+}
+
 img {
     width: 100%;
     aspect-ratio: 1;
