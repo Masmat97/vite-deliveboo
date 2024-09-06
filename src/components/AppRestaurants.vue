@@ -15,15 +15,18 @@ export default {
     },
     mounted() {
         this.getTypes();
-        const url = `${this.base_url}api/restaurants`
-        axios.get(url).then(response => {
-            this.restaurants = response.data.restaurants
-            this.filteredRestaurants = this.restaurants.data
-            console.log('Ristororanti' + this.restaurants);
-
-        })
+        this.getRestaurants();
     },
     methods: {
+        getRestaurants() {
+            const url = `${this.base_url}api/restaurants`
+            axios.get(url).then(response => {
+                this.restaurants = response.data.restaurants
+                this.filteredRestaurants = this.restaurants.data
+                console.log('Ristororanti' + this.restaurants);
+
+            })
+        },
         getTypes() {
             axios.get(`${this.base_url}api/types`).then(response => {
                 this.types = response.data.types;
@@ -45,7 +48,7 @@ export default {
 }
 </script>
 <template>
-    <div class="container-fluid mt-10">
+    <div class="container-fluid">
 
         <div class="row">
 
@@ -56,6 +59,7 @@ export default {
                     <label :for="type">{{ type.name }}</label>
                 </div>
                 <button @click="searchRestaurants">Cerca</button>
+
             </div>
 
             <div class="col-10 d-flex flex-wrap">

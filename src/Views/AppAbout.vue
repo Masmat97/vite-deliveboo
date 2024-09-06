@@ -15,7 +15,7 @@ export default {
 
 <!-- HTML -->
 <template>
-    <div class="card mt-10">
+    <div class="card">
         <col-6 class="p-4">
             <h5>About us</h5>
             <p>

@@ -17,7 +17,9 @@ export default {
 
     <body>
       <AppHeader />
-      <router-view />
+      <div class="general-container">
+        <router-view />
+      </div>
       <AppFooter />
     </body>
   </div>
@@ -32,5 +34,10 @@ html {
   padding: 0;
   font-family: 'Arial', sans-serif;
   /* Scegli il font che preferisci */
+}
+
+.general-container {
+  margin-top: 10rem;
+  margin-bottom: 10rem;
 }
 </style>

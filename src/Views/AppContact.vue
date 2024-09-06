@@ -34,7 +34,7 @@ export default {
 
 <!-- HTML -->
 <template>
-    <div class="card mt-10">
+    <div class="card">
         <div class="col-6 p-4">
             <h2>Contact me</h2>
             <p>It’s important to note that the contact page is not the only place where you

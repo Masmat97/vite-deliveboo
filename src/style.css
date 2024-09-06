@@ -2,6 +2,10 @@
     margin-top: 10rem;
 }
 
+.mb-10 {
+    margin-bottom: 10rem;
+}
+
 footer {
     position: fixed;
     bottom: 0;

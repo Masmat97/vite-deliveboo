@@ -39,14 +39,6 @@ export default {
                         </div>
                     </div>
 
-                    <div class=" d-flex justify-content-center">
-                        <i class="fa-brands fa-facebook"></i>
-                        <i class="fa-brands fa-square-instagram"></i>
-                        <i class="fa-brands fa-twitter"></i>
-                        <i class="fa-brands fa-tiktok"></i>
-
-                    </div>
-
                 </div>
             </div>
         </div>
@@ -54,6 +46,12 @@ export default {
 </template>
 
 <style scoped>
+footer {
+    position: fixed;
+    bottom: 0;
+    margin: 0;
+}
+
 a {
     color: white;
     text-decoration: none;
