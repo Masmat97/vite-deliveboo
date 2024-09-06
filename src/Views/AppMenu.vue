@@ -27,10 +27,8 @@ export default {
     <div v-if="this.restaurant">
         <div class="container">
             <div class="row">
-                <div class="col-8">
-                    <h1>{{ restaurant.name }}</h1>
-                </div>
-                <div class="col-8">
+                <h1>{{ restaurant.name }}</h1>
+                <div class="col-md-4 col-sm-6 col-xs-12">
                     <div v-if="restaurant.image.startsWith('http')">
                         <img :src="restaurant.image" class="card-img-top" alt="">
                     </div>
@@ -38,11 +36,33 @@ export default {
                         <img :src="url + 'storage/' + restaurant.image" class="card-img-top" alt="">
                     </div>
                 </div>
-                <div>
-                    <DishCard v-for="dish in this.restaurant.dishes" :dish="dish" />
+                <div class="col-md-6 col-sm-6 col-xs-12 mt-5">
+                    <p>{{ restaurant.address }}</p>
+                    <p>
+                        <span v-for="type in restaurant.types"> {{ type.name }} &nbsp</span>
+                    </p>
                 </div>
-                <div v-for="type in this.restaurant.types">
-                    tipologia: {{ type.name }}
+            </div>
+            <hr>
+            <div class="row mt-5">
+                <div class="col-md-8 col-sm-12 col-xs-12">
+                    <!-- Dish list -->
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12 text-center" v-for="dish in this.restaurant.dishes"
+                            :key="dish.id">
+                            <DishCard :dish="dish" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-12 col-xs-12">
+                    <!-- Cart summary -->
+                    <div class="card cart mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Il carrello è vuoto</h5>
+                            <p class="card-text">Non ci sono articoli nel carrello.</p>
+                            <a href="#" class="btn btn-primary">Continua a comprare</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
