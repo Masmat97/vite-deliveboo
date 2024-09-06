@@ -1,30 +1,3 @@
-<script>
-export default {
-  name: 'AppHeader',
-  data() {
-    return {
-      cartItemCount: 0,
-      isCartEmpty: true,
-    };
-  },
-  mounted() {
-    this.updateCartItemCount();
-    window.addEventListener('storage', this.updateCartItemCount);
-  },
-  beforeDestroy() {
-    window.removeEventListener('storage', this.updateCartItemCount);
-  },
-  methods: {
-    updateCartItemCount() {
-      // Ottieni il carrello dal localStorage
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      this.cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
-      this.isCartEmpty = this.cartItemCount === 0;
-    }
-  }
-}
-</script>
-
 <template>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
     integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
@@ -62,10 +35,41 @@ export default {
             </form>
           </li>
         </ul>
+
       </div>
+
     </div>
   </nav>
 </template>
+
+<script>
+import { eventBus } from '../eventBus'; // Assicurati che il percorso sia corretto
+
+export default {
+  name: 'AppHeader',
+  data() {
+    return {
+      cartItemCount: 0,
+      isCartEmpty: true,
+    };
+  },
+  mounted() {
+    this.updateCartItemCount();
+    eventBus.on('cartUpdated', this.updateCartItemCount);
+  },
+  beforeDestroy() {
+    eventBus.off('cartUpdated', this.updateCartItemCount);
+  },
+  methods: {
+    updateCartItemCount() {
+      // Ottieni il carrello dal localStorage
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      this.cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
+      this.isCartEmpty = this.cartItemCount === 0;
+    }
+  }
+}
+</script>
 
 <style scoped>
 nav {
@@ -134,15 +138,19 @@ img {
   0% {
     background-image: url('../assets/img/pasta.png');
   }
+
   25% {
     background-image: url('../assets/img/pizza.png');
   }
+
   50% {
     background-image: url('../assets/img/pollo.png');
   }
+
   75% {
     background-image: url('../assets/img/sushi.png');
   }
+
   100% {
     background-image: url('../assets/img/pasta.png');
   }
