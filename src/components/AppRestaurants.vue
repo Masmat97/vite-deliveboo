@@ -76,7 +76,7 @@ export default {
                         <div class="card-body">
 
                             <h5 class="card-title">{{ restaurant.name }}</h5>
-                            <router-link :to="{ name: 'restaurant', params: { id: restaurant.id } }">View
+                            <router-link :to="{ name: 'restaurant', params: { name: restaurant.name } }">View
                                 Menù</router-link>
                         </div>
                     </div>

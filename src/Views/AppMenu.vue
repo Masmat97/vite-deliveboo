@@ -14,7 +14,7 @@ export default {
         }
     },
     mounted() {
-        const url = `${this.base_url}api/restaurants/${this.$route.params.id}`
+        const url = `${this.base_url}api/restaurants/${this.$route.params.name}`
         axios.get(url).then(response => {
             this.restaurant = response.data.restaurants
             console.log(this.restaurant);

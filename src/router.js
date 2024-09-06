@@ -9,7 +9,7 @@
 //     { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound }, 
 //     { path: '/about', name: 'about', component: AppAbout },
 //     { path: '/contact', name: 'contact', component: AppContact },
-  
+
 
 
 // ];
@@ -67,23 +67,23 @@ const router = createRouter({
             path: '/restaurants',
             name: 'restaurants',
             component: AppHome
-        },{
-            path: '/restaurant/:id',
+        }, {
+            path: '/restaurant/:name',
             name: 'restaurant',
             component: AppMenu
-        },{
+        }, {
             path: '/terms',
             name: 'terms',
             component: AppTerms
-        },{
+        }, {
             path: '/privacy',
             name: 'privacy',
             component: AppPrivacy
-        },{
+        }, {
             path: '/cookies',
             name: 'cookies',
             component: AppCookies
-        },{
+        }, {
             path: '/FAQ',
             name: 'FAQ',
             component: AppFaq
