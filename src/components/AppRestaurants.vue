@@ -76,8 +76,13 @@ export default {
                         <div class="card-body">
 
                             <h5 class="card-title">{{ restaurant.name }}</h5>
-                            <router-link :to="{ name: 'restaurant', params: { name: restaurant.name } }">View
-                                Menù</router-link>
+                            <router-link :to="{ name: 'restaurant', params: { name: restaurant.name } }"><a
+                                    class="my-3 btn btn-danger" href="#" role="button">Visualizza Menù</a>
+                            </router-link>
+
+                            <p>
+                                <span v-for="type in restaurant.types"> -{{ type.name }}</span>
+                            </p>
                         </div>
                     </div>
                 </div>
