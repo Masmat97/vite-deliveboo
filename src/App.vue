@@ -37,7 +37,7 @@ html {
 }
 
 .general-container {
+  min-height: 100vh;
   margin-top: 10rem;
-  margin-bottom: 10rem;
 }
 </style>

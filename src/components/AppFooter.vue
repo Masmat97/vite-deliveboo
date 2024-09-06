@@ -46,11 +46,7 @@ export default {
 </template>
 
 <style scoped>
-footer {
-    position: fixed;
-    bottom: 0;
-    margin: 0;
-}
+footer {}
 
 a {
     color: white;
