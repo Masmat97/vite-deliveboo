@@ -1,18 +1,23 @@
 <template>
     <div class="cart-container">
-      <h2>Il tuo Carrello</h2>
-      <div v-if="cart.length > 0" class="cart-items">
-        <div v-for="item in cart" :key="item.id" class="cart-item">
-          <h4>{{ item.name }}</h4>
-          <p>Prezzo: {{ item.price }} €</p>
-          <p>Quantità: {{ item.quantity }}</p>
-        </div>
-        <div class="checkout">
-          <router-link to="/checkout" class="btn btn-primary">Procedi al pagamento</router-link>
-        </div>
+      <h1>Carrello</h1>
+      <div v-if="cart.length === 0" class="empty-cart">
+        <p>Il carrello è vuoto</p>
       </div>
-      <div v-else class="empty-cart">
-        <p>Il carrello è vuoto.</p>
+      <div v-else>
+        <div v-for="item in cart" :key="item.id" class="cart-item">
+          <img :src="item.image" class="cart-item-image" alt="Product image">
+          <div class="cart-item-details">
+            <h5>{{ item.name }}</h5>
+            <p>Prezzo: {{ item.price }} €</p>
+            <p>Quantità: {{ item.quantity }}</p>
+            <button @click="removeFromCart(item.id)">Rimuovi</button>
+          </div>
+        </div>
+        <div class="cart-summary">
+          <p>Total: {{ cartTotal }} €</p>
+          <button class="btn btn-primary">Procedi al pagamento</button>
+        </div>
       </div>
     </div>
   </template>
@@ -22,72 +27,64 @@
     name: 'Cart',
     data() {
       return {
-        cart: []
+        cart: [],
       };
     },
-    mounted() {
-      this.loadCart();
+    computed: {
+      cartTotal() {
+        return this.cart.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
+      }
     },
     methods: {
-      loadCart() {
+      updateCart() {
+        // Recupera il carrello dal localStorage
         this.cart = JSON.parse(localStorage.getItem('cart')) || [];
+      },
+      removeFromCart(id) {
+        // Filtra l'array del carrello per rimuovere l'elemento con l'ID specificato
+        const updatedCart = this.cart.filter(item => item.id !== id);
+        // Aggiorna il carrello nel localStorage
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
+        // Aggiorna lo stato del componente
+        this.updateCart();
       }
+    },
+    mounted() {
+      this.updateCart();
     }
   }
   </script>
   
   <style scoped>
   .cart-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     padding: 20px;
   }
   
-  h2 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-  }
-  
-  .cart-items {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
+  .empty-cart {
+    text-align: center;
+    padding: 20px;
   }
   
   .cart-item {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    width: 80%;
-    max-width: 600px;
+    margin-bottom: 10px;
   }
   
-  .checkout {
+  .cart-item-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-right: 20px;
+  }
+  
+  .cart-item-details {
+    flex: 1;
+  }
+  
+  .cart-summary {
     margin-top: 20px;
-  }
-  
-  .btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-    color: white;
-  }
-  
-  .empty-cart {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 200px;
-  }
-  
-  .empty-cart p {
-    font-size: 1.5rem;
-    color: #555;
+    text-align: right;
   }
   </style>
   
