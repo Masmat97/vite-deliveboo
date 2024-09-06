@@ -3,15 +3,26 @@ export default {
   name: 'AppHeader',
   data() {
     return {
-
+      cartItemCount: 0,
+      isCartEmpty: true,
     };
   },
   mounted() {
-
+    this.updateCartItemCount();
+    window.addEventListener('storage', this.updateCartItemCount);
+  },
+  beforeDestroy() {
+    window.removeEventListener('storage', this.updateCartItemCount);
+  },
+  methods: {
+    updateCartItemCount() {
+      // Ottieni il carrello dal localStorage
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      this.cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
+      this.isCartEmpty = this.cartItemCount === 0;
+    }
   }
-
 }
-
 </script>
 
 <template>
@@ -35,17 +46,23 @@ export default {
           <li class="nav-item"><a href="http://127.0.0.1:8000/login">Login</a></li>
         </ul>
 
-        <ul class="navbar-navmb-2 mb-lg-0">
-          <li><router-link to="/cart">Carrello<i class="fa-solid fa-cart-shopping"></i></router-link></li>
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <li>
+            <router-link to="/cart">
+              <i class="fa-solid fa-cart-shopping"></i>
+              <span v-if="isCartEmpty">Il carrello è vuoto</span>
+              <span v-else>
+                Carrello <span class="cart-item-count">{{ cartItemCount }}</span>
+              </span>
+            </router-link>
+          </li>
           <li>
             <form class="d-flex" role="search">
               <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search">
             </form>
           </li>
         </ul>
-
       </div>
-
     </div>
   </nav>
 </template>
@@ -72,7 +89,6 @@ img {
   width: 100%;
   object-fit: cover;
   object-position: center;
-
 }
 
 .navbar {
@@ -105,23 +121,28 @@ img {
   font-weight: bold;
 }
 
+.cart-item-count {
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 0 5px;
+  margin-left: 5px;
+  font-size: 14px;
+}
+
 @keyframes backgroundChange {
   0% {
     background-image: url('../assets/img/pasta.png');
   }
-
   25% {
     background-image: url('../assets/img/pizza.png');
   }
-
   50% {
     background-image: url('../assets/img/pollo.png');
   }
-
   75% {
     background-image: url('../assets/img/sushi.png');
   }
-
   100% {
     background-image: url('../assets/img/pasta.png');
   }

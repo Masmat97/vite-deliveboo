@@ -1,28 +1,6 @@
-// import { createRouter, createWebHistory } from 'vue-router';
-// import AppHome from './views/AppHome.vue'; // Utilizza '@' per referenziare la cartella 'src'
-// import NotFound from './views/Not_found.vue';
-// import AppAbout from './views/AppAbout.vue';
-// import AppContact from './views/AppContact.vue';
+import { createRouter, createWebHistory } from 'vue-router';
 
-// const routes = [
-//     { path: '/', name: 'Home', component: AppHome },
-//     { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound }, 
-//     { path: '/about', name: 'about', component: AppAbout },
-//     { path: '/contact', name: 'contact', component: AppContact },
-
-
-
-// ];
-
-// const router = createRouter({
-//     history: createWebHistory(),
-//     routes
-// });
-
-// export default router;
-
-import { createRouter, createWebHistory } from "vue-router";
-
+// Importa i tuoi componenti
 import AppHome from './Views/AppHome.vue';
 import AppAbout from './views/AppAbout.vue';
 import AppContact from './views/AppContact.vue';
@@ -32,6 +10,8 @@ import AppTerms from "./Views/AppTerms.vue";
 import AppPrivacy from "./Views/AppPrivacy.vue";
 import AppCookies from "./Views/AppCookies.vue";
 import AppFaq from "./Views/AppFaq.vue";
+import Cart from './components/Cart.vue'; // Importa il componente del carrello
+import Checkout from './components/Checkout.vue'; // Importa il componente del checkout
 
 const router = createRouter({
     history: createWebHistory(),
@@ -57,41 +37,51 @@ const router = createRouter({
             component: AppContact
         },
         {
-            // path: '/:pathMatch(.)',
-            path: '/:pathMatch(.)',
-            name: 'not_found',
-            component: Not_found
-        },
-        {
             path: '/restaurants',
             name: 'restaurants',
             component: AppHome
-        }, {
+        },
+        {
             path: '/restaurant/:name',
             name: 'restaurant',
             component: AppMenu
-        }, {
+        },
+        {
             path: '/terms',
             name: 'terms',
             component: AppTerms
-        }, {
+        },
+        {
             path: '/privacy',
             name: 'privacy',
             component: AppPrivacy
-        }, {
+        },
+        {
             path: '/cookies',
             name: 'cookies',
             component: AppCookies
-        }, {
+        },
+        {
             path: '/FAQ',
             name: 'FAQ',
             component: AppFaq
         },
-
-
+        {
+            path: '/cart',
+            name: 'cart',
+            component: Cart
+        },
+        {
+            path: '/checkout',
+            name: 'checkout',
+            component: Checkout
+        },
+        {
+            path: '/:pathMatch(.*)*',
+            name: 'not_found',
+            component: Not_found
+        }
     ]
-
 });
 
 export { router };
-
