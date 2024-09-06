@@ -43,8 +43,6 @@
 </template>
 
 <script>
-import { eventBus } from '../eventBus'; // Assicurati che il percorso sia corretto
-
 export default {
   name: 'AppHeader',
   data() {
@@ -55,10 +53,10 @@ export default {
   },
   mounted() {
     this.updateCartItemCount();
-    eventBus.on('cartUpdated', this.updateCartItemCount);
+    window.addEventListener('storage', this.updateCartItemCount);
   },
   beforeDestroy() {
-    eventBus.off('cartUpdated', this.updateCartItemCount);
+    window.removeEventListener('storage', this.updateCartItemCount);
   },
   methods: {
     updateCartItemCount() {
