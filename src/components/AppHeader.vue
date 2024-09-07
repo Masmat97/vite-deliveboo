@@ -43,6 +43,8 @@
 </template>
 
 <script>
+import { eventBus } from '@/eventBus';
+
 export default {
   name: 'AppHeader',
   data() {
@@ -53,14 +55,13 @@ export default {
   },
   mounted() {
     this.updateCartItemCount();
-    window.addEventListener('storage', this.updateCartItemCount);
+    eventBus.on('cart-updated', this.updateCartItemCount);
   },
   beforeDestroy() {
-    window.removeEventListener('storage', this.updateCartItemCount);
+    eventBus.off('cart-updated', this.updateCartItemCount);
   },
   methods: {
     updateCartItemCount() {
-      // Ottieni il carrello dal localStorage
       const cart = JSON.parse(localStorage.getItem('cart')) || [];
       this.cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
       this.isCartEmpty = this.cartItemCount === 0;

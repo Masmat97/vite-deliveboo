@@ -23,6 +23,8 @@
   </template>
   
   <script>
+  import { eventBus } from '@/eventBus';
+  
   export default {
     name: 'Cart',
     data() {
@@ -37,20 +39,21 @@
     },
     methods: {
       updateCart() {
-        // Recupera il carrello dal localStorage
         this.cart = JSON.parse(localStorage.getItem('cart')) || [];
       },
       removeFromCart(id) {
-        // Filtra l'array del carrello per rimuovere l'elemento con l'ID specificato
         const updatedCart = this.cart.filter(item => item.id !== id);
-        // Aggiorna il carrello nel localStorage
         localStorage.setItem('cart', JSON.stringify(updatedCart));
-        // Aggiorna lo stato del componente
         this.updateCart();
+        eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
       }
     },
     mounted() {
       this.updateCart();
+      eventBus.on('cart-updated', this.updateCart);
+    },
+    beforeDestroy() {
+      eventBus.off('cart-updated', this.updateCart);
     }
   }
   </script>

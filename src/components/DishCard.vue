@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import { eventBus } from '@/eventBus';
+
 export default {
   name: 'DishCard',
   props: ['dish'],
@@ -43,6 +45,7 @@ export default {
       }
 
       localStorage.setItem('cart', JSON.stringify(cart));
+      eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
       alert(`${this.dish.name} è stato aggiunto al carrello.`);
     }
   }
