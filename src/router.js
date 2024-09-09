@@ -11,7 +11,7 @@ import AppPrivacy from "./Views/AppPrivacy.vue";
 import AppCookies from "./Views/AppCookies.vue";
 import AppFaq from "./Views/AppFaq.vue";
 import Cart from './components/Cart.vue'; // Importa il componente del carrello
-import Checkout from './components/Checkout.vue'; // Importa il componente del checkout
+import Checkout from './components/checkout.vue'; // Importa il componente del checkout
 
 const router = createRouter({
     history: createWebHistory(),
