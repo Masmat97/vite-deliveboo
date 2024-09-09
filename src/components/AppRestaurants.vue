@@ -74,7 +74,7 @@ export default {
             <div class="col-xl-2 col-lg-3 col-md-4 mt-5">
                 <button type="button" class="btn btn-danger d-md-none" @click="isOpen = !isOpen">
 
-                    <span class="navbar-toggler-icon"><i class="fa-solid fa-bars"></i></span>
+                    <span><i class="fa-solid fa-bars"></i> Filtra</span>
                 </button>
 
                 <div class="filter-menu" :class="{ 'd-md-block': true, 'd-none': !isOpen }">
