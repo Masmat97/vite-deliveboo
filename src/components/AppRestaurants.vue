@@ -72,7 +72,7 @@ export default {
         <div class="row">
 
             <div class="col-xl-2 col-lg-3 col-md-4 mt-5">
-                <button type="button" class="btn btn-dark my-3 d-lg-none" @click="isOpen = !isOpen">
+                <button type="button" class="btn btn-danger my-3 d-lg-none" @click="isOpen = !isOpen">
                     <i class="fa-solid fa-bars"></i>
                     <span class="navbar-toggler-icon"></span>
                 </button>
