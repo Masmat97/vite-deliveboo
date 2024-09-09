@@ -48,8 +48,8 @@ export default {
                 <div class="col-md-8 col-sm-12 col-xs-12">
                     <!-- Dish list -->
                     <div class="row">
-                        <div class="col-md-6 col-sm-12 col-xs-12 text-center" v-for="dish in this.restaurant.dishes"
-                :key="dish.id">
+                        <div class="col-md-6 col-sm-6 col-xs-12 text-center my-3" v-for="dish in this.restaurant.dishes"
+                            :key="dish.id">
                             <DishCard :dish="dish" />
                         </div>
                     </div>
@@ -70,17 +70,17 @@ export default {
 </template>
 <style scoped>
 @media (min-width: 669px) and (max-width: 991px) {
-  .col-md-6 {
-    flex: 0 0 100%;
-    max-width: 100%;
-  }
+    .col-md-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
 }
 
 @media (max-width: 767px) {
-  .text-center {
-    text-align: center;
-    display: flex;
-    justify-content: center;
-  }
+    .text-center {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+    }
 }
 </style>
