@@ -11,8 +11,9 @@ export default {
             types: [], // add more types as needed
             selectedTypes: [],
             filteredRestaurants: '',
-            currentPage: 1,
-            totalPages: 0,
+            currentPage: 1, // add this to keep track of the current page
+            totalPages: 0, // add this to store the total number of pages
+            isOpen: false
         }
     },
     mounted() {
@@ -69,15 +70,24 @@ export default {
 <template>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xl-2 col-lg-3 col-md-4 border mt-5">
-                <p class="my-3 fw-bold">Filtra per tipologia:</p>
-                <div v-for="type in this.types" :key="type" class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" :id="type" :value="type"
-                        v-model="selectedTypes">
-                    <label class="form-check-label ms-3" :for="type">{{ type.name }}</label>
+
+            <div class="col-xl-2 col-lg-3 col-md-4 mt-5">
+                <button type="button" class="btn btn-danger my-3 d-lg-none" @click="isOpen = !isOpen">
+                    <i class="fa-solid fa-bars"></i>
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="filter-menu" :class="{ 'd-lg-block': true, 'd-none': !isOpen }">
+                    <p class="my-3 fw-bold">Filtra per tipologia:</p>
+                    <div v-for="type in this.types" :key="type" class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" :id="type" :value="type"
+                            v-model="selectedTypes">
+                        <label class="form-check-label ms-3" :for="type">{{ type.name }}</label>
+                    </div>
+                    <button type="button" class="btn btn-danger my-3" @click="searchRestaurants">Cerca</button>
                 </div>
-                <button type="button" class="btn btn-danger my-3" @click="searchRestaurants">Cerca</button>
             </div>
+
 
             <div class="col-xl-10 col-lg-9 col-md-8 d-flex flex-wrap">
                 <div v-for="restaurant in filteredRestaurants" class="col-xl-3 col-lg-3 col-md-6 mt-5">
@@ -153,5 +163,34 @@ ul {
 
 li {
     list-style: none;
+}
+
+i {
+    width: 0rem;
+    font-size: 1.5rem;
+    margin-left: 0.5rem;
+    padding: 0;
+    margin: 0;
+}
+
+.filter-menu {
+    display: block;
+}
+
+@media (max-width: 500px) {
+    .filter-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        padding: 10px;
+        width: 200px;
+    }
+
+    .filter-menu.d-block {
+        display: block;
+    }
 }
 </style>
