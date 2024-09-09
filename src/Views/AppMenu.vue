@@ -30,10 +30,10 @@ export default {
                 <h1>{{ restaurant.name }}</h1>
                 <div class="col-md-4 col-sm-6 col-xs-12">
                     <div v-if="restaurant.image.startsWith('http')">
-                        <img :src="restaurant.image" class="card-img-top" alt="">
+                        <img :src="restaurant.image" class="img-fluid" alt="">
                     </div>
                     <div v-else>
-                        <img :src="url + 'storage/' + restaurant.image" class="card-img-top" alt="">
+                        <img :src="url + 'storage/' + restaurant.image" class="img-fluid" alt="">
                     </div>
                 </div>
                 <div class="col-md-6 col-sm-6 col-xs-12 mt-5">
@@ -48,8 +48,8 @@ export default {
                 <div class="col-md-8 col-sm-12 col-xs-12">
                     <!-- Dish list -->
                     <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-12 text-center" v-for="dish in this.restaurant.dishes"
-                            :key="dish.id">
+                        <div class="col-md-6 col-sm-12 col-xs-12 text-center" v-for="dish in this.restaurant.dishes"
+                :key="dish.id">
                             <DishCard :dish="dish" />
                         </div>
                     </div>
@@ -57,10 +57,10 @@ export default {
                 <div class="col-md-4 col-sm-12 col-xs-12">
                     <!-- Cart summary -->
                     <div class="card cart mb-3">
-                        <div class="card-body">
+                        <div class="card-body d-flex flex-column justify-content-center">
                             <h5 class="card-title">Il carrello è vuoto</h5>
                             <p class="card-text">Non ci sono articoli nel carrello.</p>
-                            <a href="#" class="btn btn-primary">Continua a comprare</a>
+                            <a href="#" class="btn btn-primary mt-auto">Continua a comprare</a>
                         </div>
                     </div>
                 </div>
@@ -68,5 +68,19 @@ export default {
         </div>
     </div>
 </template>
+<style scoped>
+@media (min-width: 669px) and (max-width: 991px) {
+  .col-md-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
 
-<style scoped></style>
+@media (max-width: 767px) {
+  .text-center {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+  }
+}
+</style>
