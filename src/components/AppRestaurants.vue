@@ -72,12 +72,12 @@ export default {
         <div class="row">
 
             <div class="col-xl-2 col-lg-3 col-md-4 mt-5">
-                <button type="button" class="btn btn-danger d-lg-none" @click="isOpen = !isOpen">
+                <button type="button" class="btn btn-danger d-md-none" @click="isOpen = !isOpen">
 
-                    <span class="navbar-toggler-icon"><i class="fa-solid fa-bars"></i></span>
+                    <span><i class="fa-solid fa-bars"></i> Filtra</span>
                 </button>
 
-                <div class="filter-menu" :class="{ 'd-lg-block': true, 'd-none': !isOpen }">
+                <div class="filter-menu" :class="{ 'd-md-block': true, 'd-none': !isOpen }">
                     <p class="my-3 fw-bold">Filtra per tipologia:</p>
                     <div v-for="type in this.types" :key="type" class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" role="switch" :id="type" :value="type"
