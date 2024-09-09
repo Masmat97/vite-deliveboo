@@ -72,9 +72,9 @@ export default {
         <div class="row">
 
             <div class="col-xl-2 col-lg-3 col-md-4 mt-5">
-                <button type="button" class="btn btn-danger my-3 d-lg-none" @click="isOpen = !isOpen">
-                    <i class="fa-solid fa-bars"></i>
-                    <span class="navbar-toggler-icon"></span>
+                <button type="button" class="btn btn-danger d-lg-none" @click="isOpen = !isOpen">
+
+                    <span class="navbar-toggler-icon"><i class="fa-solid fa-bars"></i></span>
                 </button>
 
                 <div class="filter-menu" :class="{ 'd-lg-block': true, 'd-none': !isOpen }">
@@ -165,32 +165,7 @@ li {
     list-style: none;
 }
 
-i {
-    width: 0rem;
-    font-size: 1.5rem;
-    margin-left: 0.5rem;
-    padding: 0;
-    margin: 0;
-}
-
 .filter-menu {
     display: block;
-}
-
-@media (max-width: 500px) {
-    .filter-menu {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        background-color: #fff;
-        border: 1px solid #ddd;
-        padding: 10px;
-        width: 200px;
-    }
-
-    .filter-menu.d-block {
-        display: block;
-    }
 }
 </style>
