@@ -11,44 +11,31 @@ export default {
         return {
             base_url: 'http://localhost:8000/',
             restaurant: '',
-            cart: [],
             cart: JSON.parse(localStorage.getItem('cart')) || []
-
         }
     },
-    computed: {
-  totalOrderAmount() {
-    return this.cart.reduce((acc, item) => acc + (item.dish.price * item.quantity), 0).toFixed(2);
-  }
-},
+    // ...
     methods: {
         addToCart(dish, quantity) {
-            const cartItem = { dish, quantity };
-            this.cart.push(cartItem);
-            localStorage.setItem('cart', JSON.stringify(this.cart));
-        },
-        decrementQuantity(item) {
-            item.quantity -= 1;
-            if (item.quantity <= 0) {
-                this.removeFromCart(item);
-            }
-        },
-        incrementQuantity(item) {
-            item.quantity += 1;
-        },
-        removeFromCart(item) {
-            const index = this.cart.indexOf(item);
-            if (index !== -1) {
-                this.cart.splice(index, 1);
-            }
-        }
-    },
-    mounted() {
-        const url = `${this.base_url}api/restaurants/${this.$route.params.name}`
-        axios.get(url).then(response => {
-            this.restaurant = response.data.restaurants
-            console.log(this.restaurant);
-        })
+            console.log('Adding to cart:', dish, quantity);
+    const quantityInput = parseInt(this.$refs.quantityInput.value) || 1;
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existingDish = cart.find(item => item.dish.id === dish.id);
+
+    if (existingDish) {
+      existingDish.quantity += quantityInput;
+    } else {
+      cart.push({
+        dish: dish, // Add the entire dish object to the cart item
+        quantity: quantityInput
+      });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
+  }
+,
+        // ...
     },
     beforeRouteLeave(to, from, next) {
         if (this.cart.length > 0 && to.name !== 'checkout') {
@@ -62,7 +49,26 @@ export default {
         } else {
             next();
         }
+    },
+    mounted() {
+        const url = `${this.base_url}api/restaurants/${this.$route.params.name}`
+        axios.get(url).then(response => {
+            this.restaurant = response.data.restaurants
+            console.log('Restaurant data:', this.restaurant)
+        }).catch(error => {
+            console.error('Error fetching restaurant data:', error)
+        })
+    },
+    computed: {
+        cartItems() {
+      return JSON.parse(localStorage.getItem('cart')) || [];
+    },
+    totalOrderAmount() {
+      return this.cartItems.reduce((acc, item) => acc + (item.dish.price * item.quantity), 0).toFixed(2);
     }
+    },
+    
+
 }
 </script>
 
@@ -101,10 +107,10 @@ export default {
                     <!-- Cart summary -->
                     <div class="card cart mb-3">
                         <div class="card-body d-flex flex-column justify-content-center">
-                            <h5 class="card-title" v-if="cart.length === 0">Il carrello è vuoto</h5>
+                            <h5 class="card-title" v-if="cartItems.length === 0">Il carrello è vuoto</h5>
                             <h5 class="card-title" v-else>Il tuo carrello</h5>
-                            <ul v-if="cart.length > 0">
-                                <li v-for="(item, index) in cart" :key="index">
+                            <ul v-if="cartItems.length > 0">
+                                <li v-for="(item, index) in cartItems" :key="index">
                                     {{ item.dish.name }} x {{ item.quantity }}
                                     <div class="btn-group">
                                         <button class="btn btn-sm btn-secondary m-1"
@@ -116,8 +122,8 @@ export default {
                                     </div>
                                 </li>
                             </ul>
-                            <p class="card-text" v-if="cart.length === 0">Non ci sono articoli nel carrello.</p>
-                            <p class="card-text" v-if="cart.length > 0">
+                            <p class="card-text" v-if="cartItems.length === 0">Non ci sono articoli nel carrello.</p>
+                            <p class="card-text" v-if="cartItems.length > 0">
                                 Totale: {{ totalOrderAmount }} €
                             </p>
                             <hr>

@@ -8,9 +8,8 @@
       <h5 class="card-title">{{ dish.name }}</h5>
       <p class="card-text">Prezzo: {{ dish.price }} €</p>
       <div class="input-group mb-3">
-        <input type="number" class="form-control" v-model="quantity" min="1" max="10">
-          <div class="input-group-append">
-          <button class="btn btn-primary" @click="$emit('add-to-cart', dish, quantity)">Aggiungi al carrello</button>
+        <input type="number" class="form-control" v-model="quantity" min="1" max="10" ref="quantityInput">          <div class="input-group-append">
+          <button class="btn btn-primary" @click="addToCart(dish, quantity)">Aggiungi al carrello</button>
         </div>
       </div>
     </div>
@@ -29,27 +28,26 @@ export default {
     }
   },
   methods: {
-    addToCart() {
-      const quantityInput = parseInt(this.$refs.quantityInput.value) || 1;
-      let cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const existingDish = cart.find(item => item.id === this.dish.id);
+  addToCart(dish, quantity) {
+    console.log('Adding to cart:', dish, quantity);
 
-      if (existingDish) {
-        existingDish.quantity += quantityInput;
-      } else {
-        cart.push({
-          id: this.dish.id,
-          name: this.dish.name,
-          price: this.dish.price,
-          quantity: quantityInput
-        });
-      }
+    const quantityInput = parseInt(this.$refs.quantityInput.value) || 1;
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existingDish = cart.find(item => item.dish.id === dish.id);
 
-      localStorage.setItem('cart', JSON.stringify(cart));
-      eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
-
+    if (existingDish) {
+      existingDish.quantity += quantityInput;
+    } else {
+      cart.push({
+        dish: dish, // Add the entire dish object to the cart item
+        quantity: quantityInput
+      });
     }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
   }
+}
 }
 </script>
 

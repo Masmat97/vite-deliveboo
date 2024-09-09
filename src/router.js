@@ -5,7 +5,7 @@ import AppHome from './Views/AppHome.vue';
 import AppAbout from './views/AppAbout.vue';
 import AppContact from './views/AppContact.vue';
 import Not_found from "./views/Not_found.vue";
-import AppMenu from "./Views/AppMenu.vue";
+import AppMenu from "./views/AppMenu.vue";
 import AppTerms from "./Views/AppTerms.vue";
 import AppPrivacy from "./Views/AppPrivacy.vue";
 import AppCookies from "./Views/AppCookies.vue";
