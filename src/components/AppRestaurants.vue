@@ -11,8 +11,8 @@ export default {
             types: [], // add more types as needed
             selectedTypes: [],
             filteredRestaurants: '',
-            currentPage: 1, // add this to keep track of the current page
-            totalPages: 0, // add this to store the total number of pages
+            currentPage: 1,
+            totalPages: 0,
         }
     },
     mounted() {
@@ -53,13 +53,13 @@ export default {
         nextPage() {
             if (this.currentPage < this.totalPages) {
                 this.currentPage++
-                this.getRestaurants()
+                this.searchRestaurants()
             }
         },
         prevPage() {
             if (this.currentPage > 1) {
                 this.currentPage--
-                this.getRestaurants()
+                this.searchRestaurants()
             }
         }
     }
@@ -113,7 +113,7 @@ export default {
                 <div class="pagination m-3 d-flex align-items-center gap-3">
 
                     <nav aria-label="Page navigation example">
-                        <ul class="pagination">
+                        <ul v-if="this.selectedTypes == 0" class="pagination">
                             <li class="page-item"><span class="page-link" @click="prevPage"><i
                                         class="fa-solid fa-chevron-left"></i></span></li>
 
