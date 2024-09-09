@@ -7,9 +7,9 @@
       <h5 class="card-title">{{ dish.name }}</h5>
       <p class="card-text">Prezzo: {{ dish.price }} €</p>
       <div class="input-group mb-3">
-        <input type="number" class="form-control" ref="quantityInput" value="1" min="1" max="10">
-        <div class="input-group-append">
-          <button class="btn btn-primary" @click="addToCart">Aggiungi al carrello</button>
+        <input type="number" class="form-control" v-model="quantity" min="1" max="10">
+          <div class="input-group-append">
+          <button class="btn btn-primary" @click="$emit('add-to-cart', dish, quantity)">Aggiungi al carrello</button>
         </div>
       </div>
     </div>
