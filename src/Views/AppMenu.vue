@@ -48,7 +48,7 @@ export default {
                 <div class="col-md-8 col-sm-12 col-xs-12">
                     <!-- Dish list -->
                     <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-12 text-center" v-for="dish in this.restaurant.dishes"
+                        <div class="col-md-6 col-sm-6 col-xs-12 text-center my-3" v-for="dish in this.restaurant.dishes"
                             :key="dish.id">
                             <DishCard :dish="dish" />
                         </div>
