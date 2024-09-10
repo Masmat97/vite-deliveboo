@@ -1,100 +1,129 @@
 <template>
-  <div class="checkout-container">
-    <h2>Checkout</h2>
-    <div v-if="cart.length === 0" class="empty-checkout">
+  <div class="cart-container">
+    <h1>Checkout</h1>
+    <div v-if="cart.length === 0" class="empty-cart">
       <p>Il carrello è vuoto</p>
-      <router-link to="/cart">Torna al Carrello</router-link>
     </div>
-    <form v-else @submit.prevent="submitOrder">
-      <ul>
-        <li v-for="item in cart" :key="item.dish.id">
-          <span>{{ item.dish.name }}</span>
-          <span>{{ item.quantity }} x {{ item.dish.price }}€</span>
-        </li>
-      </ul>
-      <div class="checkout-footer">
-        <p>Totale: {{ totalOrderAmount }}€</p>
-        <button class="btn btn-primary mt-auto" type="submit">Paga</button>
+    <div v-else>
+      <div v-for="item in cart" :key="item.dish.id" class="cart-item">
+        <img :src="item.dish.image" class="cart-item-image" alt="Product image">
+        <div class="cart-item-details">
+          <h5>{{ item.dish.name }}</h5>
+          <p>Prezzo: {{ item.dish.price }} €</p>
+          <p>Quantità: {{ item.quantity }}</p>
+          <button @click="decrementQuantity(item.id)">-</button>
+          <button @click="incrementQuantity(item.id)">+</button>
+          <button @click="removeFromCart(item.id)">Rimuovi</button>
+        </div>
       </div>
-    </form>
+      <div class="cart-summary">
+        <p>Total: {{ cartTotal }} €</p>
+        <button class="btn btn-primary">Procedi al pagamento</button>
+        <button class="btn btn-danger" @click="emptyCart">Svuota carrello</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { eventBus } from '@/eventBus';
+
 export default {
-  name: 'Checkout',
+  name: 'Cart',
+  data() {
+    return {
+      cart: [],
+    };
+  },
   computed: {
-    cart() {
-      return JSON.parse(localStorage.getItem('cart')) || [];
-    },
-    totalOrderAmount() {
-    return this.cart.reduce((acc, item) => acc + (item.dish.price * item.quantity), 0).toFixed(2);
-  }
+    cartTotal() {
+      return this.cart.reduce((total, item) => total + item.dish.price * item.quantity, 0).toFixed(2);
+    }
   },
   methods: {
-    submitOrder() {
-      // In futuro: aggiungere logica per inoltrare l'ordine a Braintree o ad altro servizio di pagamento
-      alert('Il pagamento è stato effettuato!');
+    updateCart() {
+      this.cart = JSON.parse(localStorage.getItem('cart')) || [];
+    },
+    removeFromCart(id) {
+      const updatedCart = this.cart.filter(item => item.id !== id);
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
+      this.updateCart();
+      eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
+    },
+    incrementQuantity(id) {
+      const item = this.cart.find(item => item.id === id);
+      item.quantity++;
+      localStorage.setItem('cart', JSON.stringify(this.cart));
+      this.updateCart();
+      eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
+    },
+    decrementQuantity(id) {
+      const item = this.cart.find(item => item.id === id);
+      if (item.quantity > 1) {
+        item.quantity--;
+        localStorage.setItem('cart', JSON.stringify(this.cart));
+        this.updateCart();
+        eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
+      }
+    },
+    emptyCart() {
       localStorage.removeItem('cart');
-      this.$router.push('/');
+      this.cart = [];
+      eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
+    }
+  },
+  mounted() {
+    this.updateCart();
+    eventBus.on('cart-updated', this.updateCart);
+  },
+  beforeDestroy() {
+    eventBus.off('cart-updated', this.updateCart);
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.cart.length > 0) {
+      const confirmLeave = confirm("Sei sicuro? Il carrello sarà svuotato.");
+      if (confirmLeave) {
+        this.emptyCart();
+        next();
+      } else {
+        next(false);
+      }
+    } else {
+      next();
     }
   }
 }
 </script>
 
 <style scoped>
-.checkout-container {
+.cart-container {
   padding: 20px;
-  max-width: 800px; /* added max-width for responsiveness */
-  margin: 0 auto; /* added margin for centering */
 }
 
-.empty-checkout {
+.empty-cart {
   text-align: center;
-  margin-top: 20px;
+  padding: 20px;
 }
 
-.checkout-footer {
+.cart-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.cart-item-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.cart-item-details {
+  flex: 1;
+}
+
+.cart-summary {
   margin-top: 20px;
   text-align: right;
-}
-
-/* Media queries for responsiveness */
-
-/* Small screens (max-width: 767px) */
-@media (max-width: 767px) {
-  .checkout-container {
-    padding: 10px;
-  }
-  .empty-checkout {
-    margin-top: 10px;
-  }
-  .checkout-footer {
-    margin-top: 10px;
-  }
-}
-@media (min-width: 768px) and (max-width: 991px) {
-  .checkout-container {
-    padding: 15px;
-  }
-  .empty-checkout {
-    margin-top: 15px;
-  }
-  .checkout-footer {
-    margin-top: 15px;
-  }
-}
-
-/* Large screens (min-width: 992px) */
-@media (min-width: 992px) {
-  .checkout-container {
-    padding: 20px;
-  }
-  .empty-checkout {
-    margin-top: 20px;
-  }
-  .checkout-footer {
-    margin-top: 20px;
-  }
 }
 </style>

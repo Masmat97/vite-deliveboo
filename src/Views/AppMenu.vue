@@ -1,11 +1,14 @@
 <script>
 import axios from 'axios';
 import DishCard from '../components/DishCard.vue';
+import Cart from '../components/Cart.vue';
 
 export default {
     name: 'AppMenu',
     components: {
-        DishCard
+        DishCard,
+        Cart
+        
     },
     data() {
         return {
@@ -18,23 +21,23 @@ export default {
     methods: {
         addToCart(dish, quantity) {
             console.log('Adding to cart:', dish, quantity);
-    const quantityInput = parseInt(this.$refs.quantityInput.value) || 1;
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const existingDish = cart.find(item => item.dish.id === dish.id);
+            const quantityInput = parseInt(this.$refs.quantityInput.value) || 1;
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existingDish = cart.find(item => item.dish.id === dish.id);
 
-    if (existingDish) {
-      existingDish.quantity += quantityInput;
-    } else {
-      cart.push({
-        dish: dish, // Add the entire dish object to the cart item
-        quantity: quantityInput
-      });
-    }
+            if (existingDish) {
+                existingDish.quantity += quantityInput;
+            } else {
+                cart.push({
+                    dish: dish, // Add the entire dish object to the cart item
+                    quantity: quantityInput
+                });
+            }
 
-    localStorage.setItem('cart', JSON.stringify(cart));
-    eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
-  }
-,
+            localStorage.setItem('cart', JSON.stringify(cart));
+            eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
+        }
+        ,
         // ...
     },
     beforeRouteLeave(to, from, next) {
@@ -61,13 +64,13 @@ export default {
     },
     computed: {
         cartItems() {
-      return JSON.parse(localStorage.getItem('cart')) || [];
+            return JSON.parse(localStorage.getItem('cart')) || [];
+        },
+        totalOrderAmount() {
+            return this.cartItems.reduce((acc, item) => acc + (item.dish.price * item.quantity), 0).toFixed(2);
+        }
     },
-    totalOrderAmount() {
-      return this.cartItems.reduce((acc, item) => acc + (item.dish.price * item.quantity), 0).toFixed(2);
-    }
-    },
-    
+
 
 }
 </script>
@@ -106,30 +109,9 @@ export default {
                 <div class="col-md-4 col-sm-12 col-xs-12">
                     <!-- Cart summary -->
                     <div class="card cart mb-3">
-                        <div class="card-body d-flex flex-column justify-content-center">
-                            <h5 class="card-title" v-if="cartItems.length === 0">Il carrello è vuoto</h5>
-                            <h5 class="card-title" v-else>Il tuo carrello</h5>
-                            <ul v-if="cartItems.length > 0">
-                                <li v-for="(item, index) in cartItems" :key="index">
-                                    {{ item.dish.name }} x {{ item.quantity }}
-                                    <div class="btn-group">
-                                        <button class="btn btn-sm btn-secondary m-1"
-                                            @click="decrementQuantity(item)">-</button>
-                                        <button class="btn btn-sm btn-secondary m-1"
-                                            @click="incrementQuantity(item)">+</button>
-                                        <button class="btn btn-sm btn-danger m-1"
-                                            @click="removeFromCart(item)">x</button>
-                                    </div>
-                                </li>
-                            </ul>
-                            <p class="card-text" v-if="cartItems.length === 0">Non ci sono articoli nel carrello.</p>
-                            <p class="card-text" v-if="cartItems.length > 0">
-                                Totale: {{ totalOrderAmount }} €
-                            </p>
-                            <hr>
-                            <RouterLink :to="{ name: 'checkout' }" class="btn btn-primary mt-auto">Vai al Checkout
-                            </RouterLink>
-                        </div>
+
+                        <!-- app menu content -->
+                        <Cart :cart="cart" />
                     </div>
                 </div>
             </div>
