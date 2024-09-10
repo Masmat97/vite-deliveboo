@@ -71,15 +71,13 @@ export default {
         }
     },
     beforeRouteLeave(to, from, next) {
-  if (to.name === 'checkout') {
-    next(); // Skip confirmation dialog and cart clearing for checkout page
-  } else if (this.cartItems.length > 0) {
-    const answer = window.confirm('Sei sicuro di voler lasciare la pagina? Il tuo carrello sarà svuotato.');
+  if (this.cartItems.length > 0 && to.name !== 'checkout') {
+    const answer = window.confirm('Sei sicuro? Se non procedi con il checkout il carrello sarà svuotato');
     if (answer) {
       localStorage.removeItem('cart');
       next();
     } else {
-      next(false); // Stop navigation and stay on the same page
+      next(false);
     }
   } else {
     next();
