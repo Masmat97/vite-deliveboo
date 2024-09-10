@@ -139,6 +139,39 @@ export default {
             </div>
         </div>
     </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 bg-dark d-flex flex-row p-4 mb-5 d-flex justify-content-center">
+
+                <div class="col-xl-4 col-lg-4 col-md-4 text-white d-flex flex-column">
+                    <h4>Porta DeliveBoo sempre con te!</h4>
+                    <span>Scarica la nostra App per Smartphone</span>
+                    <button type="button" class="btn btn-light mt-3 rounded-pill" style="width: 10rem;">
+                        <i class="fa-brands fa-google-play me-2"></i>Google Play
+                    </button>
+                    <button type="button" class="btn btn-light mt-3 rounded-pill" style="width: 10rem;">
+                        <i class="fa-brands fa-apple me-2"></i>App Store
+                    </button>
+                </div>
+
+                <div class="col-xl-4 col-lg-4 col-md-4">
+
+                    <div class="app_store"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
 </template>
 
 <style scoped>
@@ -167,5 +200,28 @@ li {
 
 .filter-menu {
     display: block;
+}
+
+.card {
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+
+    box-shadow: 0px 15px 15px rgba(0, 0, 0, 0.3);
+
+}
+
+.app_store {
+    background-image: url(../assets/img/app.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 15rem;
+    height: 15rem;
+    border-radius: 10%;
+    margin-left: 10rem;
+    box-shadow: 0px 5px 5px rgba(255, 255, 255, 0.3);
 }
 </style>

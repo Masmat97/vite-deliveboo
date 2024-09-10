@@ -55,10 +55,10 @@ export default {
 
 <style scoped>
 .card {
-  <<<<<<< HEAD width: 100%;
+  width: 100%;
   min-width: 200px;
   /* adjust this value to your liking */
-  =======height: 100%;
-  >>>>>>>header-responsive
+  height: 100%;
+
 }
 </style>
