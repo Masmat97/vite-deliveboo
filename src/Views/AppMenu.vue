@@ -70,6 +70,21 @@ export default {
             return this.cartItems.reduce((acc, item) => acc + (item.dish.price * item.quantity), 0).toFixed(2);
         }
     },
+    beforeRouteLeave(to, from, next) {
+  if (to.name === 'checkout') {
+    next(); // Skip confirmation dialog and cart clearing for checkout page
+  } else if (this.cartItems.length > 0) {
+    const answer = window.confirm('Sei sicuro di voler lasciare la pagina? Il tuo carrello sarà svuotato.');
+    if (answer) {
+      localStorage.removeItem('cart');
+      next();
+    } else {
+      next(false); // Stop navigation and stay on the same page
+    }
+  } else {
+    next();
+  }
+}
 
 
 }
