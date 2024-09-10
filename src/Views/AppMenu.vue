@@ -1,25 +1,77 @@
 <script>
 import axios from 'axios';
 import DishCard from '../components/DishCard.vue';
+import Cart from '../components/Cart.vue';
 
 export default {
     name: 'AppMenu',
     components: {
-        DishCard
+        DishCard,
+        Cart
+        
     },
     data() {
         return {
             base_url: 'http://localhost:8000/',
-            restaurant: ''
+            restaurant: '',
+            cart: JSON.parse(localStorage.getItem('cart')) || []
+        }
+    },
+    // ...
+    methods: {
+        addToCart(dish, quantity) {
+            console.log('Adding to cart:', dish, quantity);
+            const quantityInput = parseInt(this.$refs.quantityInput.value) || 1;
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existingDish = cart.find(item => item.dish.id === dish.id);
+
+            if (existingDish) {
+                existingDish.quantity += quantityInput;
+            } else {
+                cart.push({
+                    dish: dish, // Add the entire dish object to the cart item
+                    quantity: quantityInput
+                });
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
+        }
+        ,
+        // ...
+    },
+    beforeRouteLeave(to, from, next) {
+        if (this.cart.length > 0 && to.name !== 'checkout') {
+            const answer = window.confirm('Sei sicuro? Se non procedi con il checkout il carrello sarà svuotato');
+            if (answer) {
+                localStorage.removeItem('cart');
+                next();
+            } else {
+                next(false);
+            }
+        } else {
+            next();
         }
     },
     mounted() {
         const url = `${this.base_url}api/restaurants/${this.$route.params.name}`
         axios.get(url).then(response => {
             this.restaurant = response.data.restaurants
-            console.log(this.restaurant);
+            console.log('Restaurant data:', this.restaurant)
+        }).catch(error => {
+            console.error('Error fetching restaurant data:', error)
         })
-    }
+    },
+    computed: {
+        cartItems() {
+            return JSON.parse(localStorage.getItem('cart')) || [];
+        },
+        totalOrderAmount() {
+            return this.cartItems.reduce((acc, item) => acc + (item.dish.price * item.quantity), 0).toFixed(2);
+        }
+    },
+
+
 }
 </script>
 
@@ -57,11 +109,9 @@ export default {
                 <div class="col-md-4 col-sm-12 col-xs-12">
                     <!-- Cart summary -->
                     <div class="card cart mb-3">
-                        <div class="card-body d-flex flex-column justify-content-center">
-                            <h5 class="card-title">Il carrello è vuoto</h5>
-                            <p class="card-text">Non ci sono articoli nel carrello.</p>
-                            <a href="#" class="btn btn-primary mt-auto">Continua a comprare</a>
-                        </div>
+
+                        <!-- app menu content -->
+                        <Cart :cart="cart" />
                     </div>
                 </div>
             </div>
