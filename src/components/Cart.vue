@@ -45,24 +45,30 @@ export default {
         eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
       }
     },
-    incrementQuantity(id) {
-      const item = this.cart.find(item => item.id === id);
-      if (item) {
-        item.quantity++;
-        localStorage.setItem('cart', JSON.stringify(this.cart));
-        this.updateCart();
-        eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
-      }
-    },
-    decrementQuantity(id) {
-      const item = this.cart.find(item => item.id === id);
-      if (item && item.quantity > 1) {
-        item.quantity--;
-        localStorage.setItem('cart', JSON.stringify(this.cart));
-        this.updateCart();
-        eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
-      }
-    },
+    incrementQuantity(item) {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const existingItem = cart.find(cartItem => cartItem.dish.id === item.dish.id);
+  if (existingItem) {
+    existingItem.quantity++;
+    localStorage.setItem('cart', JSON.stringify(cart));
+    eventBus.emit('cart-updated');
+  }
+},
+
+decrementQuantity(item) {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const existingItem = cart.find(cartItem => cartItem.dish.id === item.dish.id);
+  if (existingItem && existingItem.quantity > 1) {
+    existingItem.quantity--;
+    localStorage.setItem('cart', JSON.stringify(cart));
+    eventBus.emit('cart-updated');
+  } else if (existingItem && existingItem.quantity === 1) {
+    const index = cart.indexOf(existingItem);
+    cart.splice(index, 1);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    eventBus.emit('cart-updated');
+  }
+},
     leavePage(event) {
     if (this.cart.length > 0) {
       event.preventDefault();
@@ -97,8 +103,8 @@ beforeDestroy() {
           <h5>{{ item.dish.name }}</h5>
           <p>Prezzo: {{ item.dish.price }} €</p>
           <p>Quantità: {{ item.quantity }}</p>
-          <button @click="decrementQuantity(item.id)">-</button>
-          <button @click="incrementQuantity(item.id)">+</button>
+          <button @click="decrementQuantity(item)">-</button>
+          <button @click="incrementQuantity(item)">+</button>
           <button @click="removeItemFromCart(item)">Rimuovi</button>
         </div>
       </div>
