@@ -15,27 +15,9 @@ export default {
     }
   },
   methods: {
-    goToCheckout() {
-  if (this.cart.length === 0) {
-    alert('Il carrello è vuoto! Aggiungi alcuni piatti prima di procedere al checkout.');
-    return;
-  }
-  router.push('/checkout'); // navigate to the checkout page
-},
     updateCart() {
       this.cart = JSON.parse(localStorage.getItem('cart')) || [];
     },
-    addItemToCart(item) {
-  if (this.cart.length > 0 && this.cart[0].dish.restaurantId !== item.dish.restaurantId) {
-    const answer = window.confirm('Sei sicuro di voler cambiare ristorante? I precedenti piatti saranno tolti dal carrello.');
-    if (!answer) {
-      return;
-    }
-    localStorage.removeItem('cart');
-    this.cart = []; // Reset the cart prop
-    this.updateCart(); // Update the cart prop
-  }
-},
     removeItemFromCart(item) {
       const index = this.cart.indexOf(item);
       if (index !== -1) {
@@ -68,25 +50,13 @@ decrementQuantity(item) {
     localStorage.setItem('cart', JSON.stringify(cart));
     eventBus.emit('cart-updated');
   }
-},
-    leavePage(event) {
-    if (this.cart.length > 0) {
-      event.preventDefault();
-      alert('Il carrello non è vuoto! Sei sicuro di voler lasciare la pagina? I piatti del carrello andranno persi a meno che non si proceda con il checkout.');
-    }
-  }
+}
   },
   mounted() {
-    eventBus.on('go-to-checkout', this.goToCheckout); // listen for the 'go-to-checkout' event
   this.updateCart();
   eventBus.on('cart-updated', this.updateCart);
   window.addEventListener('beforeunload', this.leavePage);
 },
-
-beforeDestroy() {
-  eventBus.off('cart-updated', this.updateCart);
-  window.removeEventListener('beforeunload', this.leavePage);
-  }
 }
 </script>
           
