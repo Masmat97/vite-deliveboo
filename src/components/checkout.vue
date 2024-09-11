@@ -84,9 +84,11 @@ export default {
       }
     },
     emptyCart() {
-      localStorage.removeItem('cart');
-      this.cart = [];
-      eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
+      if (confirm('Sei sicuro di svuotare il carrello?')) {
+        localStorage.removeItem('cart');
+        this.cart = [];
+        eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
+      }
     }
   },
   mounted() {
