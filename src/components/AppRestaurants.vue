@@ -73,7 +73,6 @@ export default {
 
             <div class="col-xl-2 col-lg-3 col-md-4 mt-5">
                 <button type="button" class="btn btn-danger d-md-none" @click="isOpen = !isOpen">
-
                     <span><i class="fa-solid fa-bars"></i> Filtra</span>
                 </button>
 
@@ -81,10 +80,9 @@ export default {
                     <p class="my-3 fw-bold">Filtra per tipologia:</p>
                     <div v-for="type in this.types" :key="type" class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" role="switch" :id="type" :value="type"
-                            v-model="selectedTypes">
+                            v-model="selectedTypes" @change="searchRestaurants">
                         <label class="form-check-label ms-3" :for="type">{{ type.name }}</label>
                     </div>
-                    <button type="button" class="btn btn-danger my-3" @click="searchRestaurants">Cerca</button>
                 </div>
             </div>
 

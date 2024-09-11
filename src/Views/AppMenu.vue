@@ -40,19 +40,6 @@ export default {
         ,
         // ...
     },
-    beforeRouteLeave(to, from, next) {
-        if (this.cart.length > 0 && to.name !== 'checkout') {
-            const answer = window.confirm('Sei sicuro? Se non procedi con il checkout il carrello sarà svuotato');
-            if (answer) {
-                localStorage.removeItem('cart');
-                next();
-            } else {
-                next(false);
-            }
-        } else {
-            next();
-        }
-    },
     mounted() {
         const url = `${this.base_url}api/restaurants/${this.$route.params.name}`
         axios.get(url).then(response => {
@@ -70,21 +57,6 @@ export default {
             return this.cartItems.reduce((acc, item) => acc + (item.dish.price * item.quantity), 0).toFixed(2);
         }
     },
-    beforeRouteLeave(to, from, next) {
-  if (this.cartItems.length > 0 && to.name !== 'checkout') {
-    const answer = window.confirm('Sei sicuro? Se non procedi con il checkout il carrello sarà svuotato');
-    if (answer) {
-      localStorage.removeItem('cart');
-      next();
-    } else {
-      next(false);
-    }
-  } else {
-    next();
-  }
-}
-
-
 }
 </script>
 
