@@ -27,6 +27,7 @@
 
 <script>
 import { eventBus } from '@/eventBus';
+import axios from 'axios';
 
 export default {
   name: 'Checkout',
@@ -45,17 +46,19 @@ export default {
       this.cart = JSON.parse(localStorage.getItem('cart')) || [];
     },
     proceedToPayment() {
-    if (this.cart.length === 0) {
-      alert('Il carrello è vuoto! Aggiungi alcuni piatti prima di procedere al checkout.');
-      return;
-    }
+      // console.log(this.cart);
 
-    // Aggiungi un flag per indicare che l'utente sta procedendo al pagamento
-    localStorage.setItem('proceedToPayment', true);
+      const data = this.cart;
+      axios.post('http://127.0.0.1:8000/api/payment', data).then(response => {
+        console.log(response.data)
+      })
 
-    // Naviga all'URL del checkout Laravel
-    window.location.href = 'http://127.0.0.1:8000/checkout';
-  },
+      // Aggiungi un flag per indicare che l'utente sta procedendo al pagamento
+      // localStorage.setItem('proceedToPayment', true);
+
+      // // Naviga all'URL del checkout Laravel
+      // window.location.href = 'http://127.0.0.1:8000/checkout';
+    },
     removeFromCart(id) {
       const updatedCart = this.cart.filter(item => item.dish.id !== id);
       localStorage.setItem('cart', JSON.stringify(updatedCart));
