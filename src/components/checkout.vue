@@ -45,17 +45,17 @@ export default {
       this.cart = JSON.parse(localStorage.getItem('cart')) || [];
     },
     proceedToPayment() {
-    if (this.cart.length === 0) {
-      alert('Il carrello è vuoto! Aggiungi alcuni piatti prima di procedere al checkout.');
-      return;
-    }
+      if (this.cart.length === 0) {
+        alert('Il carrello è vuoto! Aggiungi alcuni piatti prima di procedere al checkout.');
+        return;
+      }
 
-    // Aggiungi un flag per indicare che l'utente sta procedendo al pagamento
-    localStorage.setItem('proceedToPayment', true);
+      // Aggiungi un flag per indicare che l'utente sta procedendo al pagamento
+      localStorage.setItem('proceedToPayment', true);
 
-    // Naviga all'URL del checkout Laravel
-    window.location.href = 'http://127.0.0.1:8000/checkout';
-  },
+      // Naviga all'URL del checkout Laravel
+      window.location.href = 'http://127.0.0.1:8000/checkout';
+    },
     removeFromCart(id) {
       const updatedCart = this.cart.filter(item => item.dish.id !== id);
       localStorage.setItem('cart', JSON.stringify(updatedCart));
@@ -81,9 +81,11 @@ export default {
       }
     },
     emptyCart() {
-      localStorage.removeItem('cart');
-      this.cart = [];
-      eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
+      if (confirm('Sei sicuro di svuotare il carrello?')) {
+        localStorage.removeItem('cart');
+        this.cart = [];
+        eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
+      }
     }
   },
   mounted() {
