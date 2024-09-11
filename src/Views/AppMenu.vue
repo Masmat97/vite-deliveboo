@@ -19,26 +19,7 @@ export default {
     },
     // ...
     methods: {
-        addToCart(dish, quantity) {
-            console.log('Adding to cart:', dish, quantity);
-            const quantityInput = parseInt(this.$refs.quantityInput.value) || 1;
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const existingDish = cart.find(item => item.dish.id === dish.id);
-
-            if (existingDish) {
-                existingDish.quantity += quantityInput;
-            } else {
-                cart.push({
-                    dish: dish, // Add the entire dish object to the cart item
-                    quantity: quantityInput
-                });
-            }
-
-            localStorage.setItem('cart', JSON.stringify(cart));
-            eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
-        }
-        ,
-        // ...
+       
     },
     mounted() {
         const url = `${this.base_url}api/restaurants/${this.$route.params.name}`
@@ -52,9 +33,6 @@ export default {
     computed: {
         cartItems() {
             return JSON.parse(localStorage.getItem('cart')) || [];
-        },
-        totalOrderAmount() {
-            return this.cartItems.reduce((acc, item) => acc + (item.dish.price * item.quantity), 0).toFixed(2);
         }
     },
 }
