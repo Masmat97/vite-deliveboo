@@ -93,19 +93,6 @@ export default {
   beforeDestroy() {
     eventBus.off('cart-updated', this.updateCart);
   },
-  beforeRouteLeave(to, from, next) {
-    if (this.cart.length > 0) {
-      const confirmLeave = confirm("Sei sicuro? Il carrello sarà svuotato.");
-      if (confirmLeave) {
-        this.emptyCart();
-        next();
-      } else {
-        next(false);
-      }
-    } else {
-      next();
-    }
-  }
 }
 </script>
 
