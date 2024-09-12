@@ -22,14 +22,20 @@ export default {
        
     },
     mounted() {
-        const url = `${this.base_url}api/restaurants/${this.$route.params.name}`
-        axios.get(url).then(response => {
+    const url = `${this.base_url}api/restaurants/${this.$route.params.slug}`
+    axios.get(url).then(response => {
+        if (response.data.success) {
+            console.log(response.data.restaurants)
             this.restaurant = response.data.restaurants
-            console.log('Restaurant data:', this.restaurant)
-        }).catch(error => {
-            console.error('Error fetching restaurant data:', error)
-        })
-    },
+
+        } else {
+            console.error('Error fetching restaurant data:', response.data.message)
+        }
+    }).catch(error => {
+        console.error('Error fetching restaurant data:', error)
+    })
+
+},
     computed: {
         cartItems() {
             return JSON.parse(localStorage.getItem('cart')) || [];

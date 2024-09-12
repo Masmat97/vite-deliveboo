@@ -22,15 +22,17 @@ export default {
     },
     methods: {
         getRestaurants() {
-            const url = `${this.base_url}api/restaurants?page=${this.currentPage}`
-            axios.get(url).then(response => {
-                this.restaurants = response.data.restaurants
-                this.filteredRestaurants = this.restaurants.data
-                this.totalPages = response.data.restaurants.last_page // get the total number of pages
-                console.log(response);
-
-            })
-        },
+        const url = `${this.base_url}api/restaurants?page=${this.currentPage}`
+        axios.get(url).then(response => {
+            this.restaurants = response.data.restaurants
+            this.filteredRestaurants = this.restaurants.data.map(restaurant => ({
+                ...restaurant,
+                slug: restaurant.name.toLowerCase().replace(/\s+/g, '-')
+            }))
+            this.totalPages = response.data.restaurants.last_page // get the total number of pages
+            console.log(response);
+        })
+    },
         getTypes() {
             axios.get(`${this.base_url}api/types`).then(response => {
                 this.types = response.data.types;
@@ -101,9 +103,9 @@ export default {
                         <div class="card-body">
 
                             <h5 class="card-title">{{ restaurant.name }}</h5>
-                            <router-link :to="{ name: 'restaurant', params: { name: restaurant.name } }"><a
-                                    class="my-3 btn btn-danger" href="#" role="button">Visualizza Menù</a>
-                            </router-link>
+                        <router-link :to="{ name: 'restaurant', params: { slug: restaurant.slug } }">
+  <a class="my-3 btn btn-danger" href="#" role="button">Visualizza Menù</a>
+</router-link>
 
                             <p>
                             <ul class="d-flex gap-3 flex-wrap">
