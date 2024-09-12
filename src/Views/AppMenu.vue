@@ -74,7 +74,7 @@ export default {
                     <div class="card cart mb-3">
 
                         <!-- app menu content -->
-                        <Cart :cart="cart" />
+                        <Cart :cart="cart" :restaurant="restaurant" />
                     </div>
                 </div>
             </div>

@@ -3,7 +3,7 @@ import { eventBus } from '@/eventBus';
 
 export default {
   name: 'Cart',
-  props: ['cart', 'restaurantId'],
+  props: ['cart', 'restaurant'],
   data() {
     return {
       cart: [],
@@ -64,7 +64,9 @@ decrementQuantity(item) {
           
 <template>
   <div class="cart-container">
-    <h1>Carrello</h1>
+    <h1>Carrello </h1>
+    <p>Stai ordinando da: <h4>{{ restaurant.name }}</h4></p>
+
     <div v-if="cart.length === 0" class="empty-cart">
       <p>Il carrello è vuoto</p>
     </div>
@@ -81,8 +83,8 @@ decrementQuantity(item) {
         </div>
       </div>
       <div class="cart-summary">
-        <p>Total: {{ cartTotal }} €</p>
-        <RouterLink :to="{ name: 'checkout' }" class="btn btn-primary mt-auto">Vai al Checkout
+        <p><b>Total: {{ cartTotal }} €</b></p>
+        <RouterLink :to="{ name: 'checkout', params: { restaurant: restaurant } }" class="btn btn-primary mt-auto">Vai al Checkout
         </RouterLink>
 
       </div>
