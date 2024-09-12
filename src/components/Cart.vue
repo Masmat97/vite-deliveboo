@@ -63,7 +63,7 @@ decrementQuantity(item) {
 <template>
   <div class="cart-container">
     <h1>Carrello </h1>
-    <p>Stai ordinando da: <h4>{{ restaurant.name }}</h4></p>
+    <!-- <p>Stai ordinando da: <h4>{{ restaurant.name }}</h4></p> -->
 
     <div v-if="cart.length === 0" class="empty-cart">
       <p>Il carrello è vuoto</p>

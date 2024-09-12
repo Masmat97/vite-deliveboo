@@ -62,7 +62,7 @@ export default {
                 </router-link></span>
             </div>
             <div>
-              <span class="nav-item"><a href="http://127.0.0.1:8000/login">Login</a></span>
+              <span class="nav-item"><a href="http://127.0.0.1:8000/login">Accedi</a></span>
               <span class="nav-item"><a href="http://localhost:8000/register">Registrati</a></span>
             </div>
           </div>
