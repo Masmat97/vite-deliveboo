@@ -46,19 +46,20 @@ export default {
       this.cart = JSON.parse(localStorage.getItem('cart')) || [];
     },
     proceedToPayment() {
-      // console.log(this.cart);
+  console.log("Attempting to proceed to payment");
+  // Simula una chiamata API per processare il pagamento
+  const data = this.cart;
+  axios.post('http://127.0.0.1:8000/api/payment', data)
+    .then(response => {
+      console.log(response.data);
+      // Naviga all'URL del checkout Laravel
+      window.location.href = 'http://127.0.0.1:8000/checkout';
+    })
+    .catch(error => {
+      console.error("There was an error processing the payment", error);
+    });
+},
 
-      const data = this.cart;
-      axios.post('http://127.0.0.1:8000/api/payment', data).then(response => {
-        console.log(response.data)
-      })
-
-      // Aggiungi un flag per indicare che l'utente sta procedendo al pagamento
-      // localStorage.setItem('proceedToPayment', true);
-
-      // // Naviga all'URL del checkout Laravel
-      // window.location.href = 'http://127.0.0.1:8000/checkout';
-    },
     removeFromCart(id) {
       if (confirm('Sei sicuro di voler rimuovere il piatto?')) {
         const index = this.cart.findIndex(item => item.dish.id === id);
