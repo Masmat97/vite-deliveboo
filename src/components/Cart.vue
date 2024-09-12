@@ -3,7 +3,7 @@ import { eventBus } from '@/eventBus';
 
 export default {
   name: 'Cart',
-  props: ['cart', 'restaurantId'],
+  props: ['cart', 'restaurant'],
   data() {
     return {
       cart: [],
@@ -62,7 +62,9 @@ decrementQuantity(item) {
           
 <template>
   <div class="cart-container">
-    <h1>Carrello</h1>
+    <h1>Carrello </h1>
+    <p>Stai ordinando da: <h4>{{ restaurant.name }}</h4></p>
+
     <div v-if="cart.length === 0" class="empty-cart">
       <p>Il carrello è vuoto</p>
     </div>
@@ -73,14 +75,14 @@ decrementQuantity(item) {
           <h5>{{ item.dish.name }}</h5>
           <p>Prezzo: {{ item.dish.price }} €</p>
           <p>Quantità: {{ item.quantity }}</p>
-          <button @click="decrementQuantity(item)">-</button>
-          <button @click="incrementQuantity(item)">+</button>
-          <button @click="removeItemFromCart(item)">Rimuovi</button>
+          <button class="btn btn-primary m-1" @click="decrementQuantity(item)">-</button>
+          <button class="btn btn-primary m-1" @click="incrementQuantity(item)">+</button>
+          <button class="btn btn-primary m-1" @click="removeItemFromCart(item)">Rimuovi</button>
         </div>
       </div>
       <div class="cart-summary">
-        <p>Total: {{ cartTotal }} €</p>
-        <RouterLink :to="{ name: 'checkout' }" class="btn btn-primary mt-auto">Vai al Checkout
+        <p><b>Total: {{ cartTotal }} €</b></p>
+        <RouterLink :to="{ name: 'checkout', params: { restaurant: restaurant } }" class="btn btn-primary mt-auto">Vai al Checkout
         </RouterLink>
 
       </div>
