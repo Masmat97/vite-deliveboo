@@ -42,13 +42,10 @@ export default {
 decrementQuantity(item) {
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
   const existingItem = cart.find(cartItem => cartItem.dish.id === item.dish.id);
-  if (existingItem && existingItem.quantity > 1) {
-    existingItem.quantity--;
-    localStorage.setItem('cart', JSON.stringify(cart));
-    eventBus.emit('cart-updated');
-  } else if (existingItem && existingItem.quantity === 1) {
-    const index = cart.indexOf(existingItem);
-    cart.splice(index, 1);
+  if (existingItem) {
+    if (existingItem.quantity > 1) {
+      existingItem.quantity--;
+    } // else, do nothing, keep the quantity at 1
     localStorage.setItem('cart', JSON.stringify(cart));
     eventBus.emit('cart-updated');
   }
