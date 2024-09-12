@@ -42,7 +42,7 @@ const router = createRouter({
             component: AppHome
         },
         {
-            path: '/restaurant/:name',
+            path: '/restaurant/:slug', //add slug
             name: 'restaurant',
             component: AppMenu
         },
