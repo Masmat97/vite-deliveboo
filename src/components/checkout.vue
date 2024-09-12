@@ -11,9 +11,9 @@
           <h5>{{ item.dish.name }}</h5>
           <p>Prezzo: {{ item.dish.price }} €</p>
           <p>Quantità: {{ item.quantity }}</p>
-          <button @click="decrementQuantity(item.dish.id)">-</button>
-          <button @click="incrementQuantity(item.dish.id)">+</button>
-          <button @click="removeFromCart(item.dish.id)">Rimuovi</button>
+          <button type="button" class="btn btn-outline-primary" @click="decrementQuantity(item.dish.id)">-</button>
+          <button type="button" class="btn btn-outline-primary" @click="incrementQuantity(item.dish.id)">+</button>
+          <button type="button" class="btn btn-outline-danger" @click="removeFromCart(item.dish.id)">Rimuovi</button>
         </div>
       </div>
       <div class="cart-summary">
@@ -60,10 +60,15 @@ export default {
       // window.location.href = 'http://127.0.0.1:8000/checkout';
     },
     removeFromCart(id) {
-      const updatedCart = this.cart.filter(item => item.dish.id !== id);
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
-      this.updateCart();
-      eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
+      if (confirm('Sei sicuro di voler rimuovere il piatto?')) {
+        const index = this.cart.findIndex(item => item.dish.id === id);
+        if (index !== -1) {
+          this.cart.splice(index, 1);
+          localStorage.setItem('cart', JSON.stringify(this.cart));
+          this.updateCart();
+          eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
+        }
+      }
     },
     incrementQuantity(id) {
       const item = this.cart.find(item => item.dish.id === id);
@@ -131,5 +136,9 @@ export default {
 .cart-summary {
   margin-top: 20px;
   text-align: right;
+}
+
+button{
+  margin-left: 1rem;
 }
 </style>
