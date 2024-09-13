@@ -117,7 +117,7 @@ incrementQuantity(item) {
 <template>
   <div class="cart-container">
     <h1>Carrello </h1>
-    <!-- <p>Stai ordinando da: <h4>{{ restaurant.name }}</h4></p> -->
+  <p>Stai ordinando da:<h5>{{ restaurant.name }}</h5></p>
     <div id="confirm" style="display: none;">
     <p id="confirm-message"></p>
     <button class="m-1" id="yes-button">Sì</button>
