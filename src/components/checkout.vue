@@ -1,6 +1,7 @@
 <template>
   <div class="cart-container">
-    <h1>Checkout</h1>
+    <h1>Riepilogo Ordini</h1>
+    <p v-if="restaurant">Stai ordinando da: <h4>{{ restaurant.name }}</h4></p>
     <div id="confirm" style="display: none;">
   <p id="confirm-message"></p>
   <button class="m-1" id="yes-button">Sì</button>
@@ -44,6 +45,8 @@ export default {
   data() {
     return {
       cart: [],
+      restaurant: null, // add a data property to store the restaurant
+
     };
   },
   computed: {
@@ -54,6 +57,7 @@ export default {
   methods: {
     updateCart() {
       this.cart = JSON.parse(localStorage.getItem('cart')) || [];
+      console.log(this.cart)
     },
     proceedToPayment() {
       console.log("Attempting to proceed to payment");
@@ -174,6 +178,7 @@ export default {
   },
   mounted() {
     this.updateCart();
+    this.restaurant = JSON.parse(localStorage.getItem('restaurant')); // retrieve the restaurant from local storage
     eventBus.on('cart-updated', this.updateCart);
   },
   beforeDestroy() {
