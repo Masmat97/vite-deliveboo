@@ -59,33 +59,71 @@ export default {
       // // Naviga all'URL del checkout Laravel
       // window.location.href = 'http://127.0.0.1:8000/checkout';
     },
-    removeFromCart(id) {
-      if (confirm('Sei sicuro di voler rimuovere il piatto?')) {
-        const index = this.cart.findIndex(item => item.dish.id === id);
-        if (index !== -1) {
-          this.cart.splice(index, 1);
-          localStorage.setItem('cart', JSON.stringify(this.cart));
-          this.updateCart();
-          eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
+    removeItemFromCart(item) {
+  const confirmBox = document.getElementById("confirm");
+  confirmBox.style.display = "block";
+  const message = `Rimuovere ${item.dish.name} dal carrello?`;
+  document.getElementById("confirm-message").innerText = message;
+
+  // Add event listeners to the confirm box buttons
+  const yesButton = document.getElementById("yes-button");
+  const noButton = document.getElementById("no-button");
+
+  yesButton.addEventListener("click", function() {
+    const index = this.cart.findIndex(cartItem => cartItem.dish.id === item.dish.id);
+    if (index !== -1) {
+      this.cart.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(this.cart));
+      this.updateCart();
+      eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
+    }
+    confirmBox.style.display = "none";
+  }.bind(this));
+
+  noButton.addEventListener("click", function() {
+    confirmBox.style.display = "none";
+  });
+},
+    incrementQuantity(item) {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const existingItem = cart.find(cartItem => cartItem.dish.id === item.dish.id);
+      if (existingItem) {
+        existingItem.quantity++;
+        localStorage.setItem('cart', JSON.stringify(cart));
+        eventBus.emit('cart-updated');
+      }
+    },
+    decrementQuantity(item) {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const existingItem = cart.find(cartItem => cartItem.dish.id === item.dish.id);
+      if (existingItem) {
+        if (existingItem.quantity > 1) {
+          existingItem.quantity--;
+          localStorage.setItem('cart', JSON.stringify(cart));
+          eventBus.emit('cart-updated');
+        } else {
+          const confirmBox = document.getElementById("confirm");
+          confirmBox.style.display = "block";
+          const message = `Rimuovere ${item.dish.name} dal carrello?`;
+          document.getElementById("confirm-message").innerText = message;
+
+          // Add event listeners to the confirm box buttons
+          const yesButton = document.getElementById("yes-button");
+          const noButton = document.getElementById("no-button");
+
+          yesButton.addEventListener("click", function() {
+            const index = cart.indexOf(existingItem);
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            eventBus.emit('cart-updated');
+            confirmBox.style.display = "none";
+          });
+
+          noButton.addEventListener("click", function() {
+            existingItem.quantity = 1;
+            confirmBox.style.display = "none";
+          });
         }
-      }
-    },
-    incrementQuantity(id) {
-      const item = this.cart.find(item => item.dish.id === id);
-      if (item) {
-        item.quantity++;
-        localStorage.setItem('cart', JSON.stringify(this.cart));
-        this.updateCart();
-        eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
-      }
-    },
-    decrementQuantity(id) {
-      const item = this.cart.find(item => item.dish.id === id);
-      if (item && item.quantity > 1) {
-        item.quantity--;
-        localStorage.setItem('cart', JSON.stringify(this.cart));
-        this.updateCart();
-        eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
       }
     },
     emptyCart() {

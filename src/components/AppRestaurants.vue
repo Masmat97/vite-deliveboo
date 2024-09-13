@@ -118,26 +118,22 @@ export default {
             </div>
         </div>
         <div class="row">
-            <div class="col-xl-12 col-lg-12 col-md-12 d-flex justify-content-center">
+    <div class="col-xl-12 col-lg-12 col-md-12 d-flex justify-content-center">
 
-                <div class="pagination m-3 d-flex align-items-center gap-3">
+        <div class="pagination m-3 d-flex align-items-center gap-3">
 
-                    <nav aria-label="Page navigation example">
-                        <ul v-if="this.selectedTypes == 0" class="pagination">
-                            <li class="page-item"><span class="page-link" @click="prevPage"><i
-                                        class="fa-solid fa-chevron-left"></i></span></li>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item"><span class="page-link" @click="prevPage"><i class="fa-solid fa-chevron-left"></i></span></li>
 
-                            <li class="page-item"><span class="page-link">Page {{ currentPage }} of {{ totalPages
-                                    }}</span>
-                            </li>
-                            <li class="page-item"><span class="page-link" @click="nextPage"><i
-                                        class="fa-solid fa-chevron-right"></i></span></li>
-                        </ul>
-                    </nav>
+                    <li class="page-item"><span class="page-link">Pagina {{ currentPage }} di {{ totalPages }}</span></li>
+                    <li class="page-item"><span class="page-link" @click="nextPage"><i class="fa-solid fa-chevron-right"></i></span></li>
+                </ul>
+            </nav>
 
-                </div>
-            </div>
         </div>
+    </div>
+</div>
     </div>
 
     <div class="container-fluid">
@@ -223,5 +219,20 @@ li {
     border-radius: 10%;
     margin-left: 10rem;
     box-shadow: 0px 5px 5px rgba(255, 255, 255, 0.3);
+}
+.pagination {
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.page-link {
+    color: #bb2d3b;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.page-link:hover {
+    color: #bb2d3b;
+    text-decoration: none;
 }
 </style>
