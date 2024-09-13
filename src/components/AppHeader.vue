@@ -50,7 +50,7 @@ export default {
 
             <div>
               <span class="nav-item"><router-link to="/">Home</router-link></span>
-              <span class="nav-item"><router-link to="/orders">Ordini</router-link></span>
+              <!-- <span class="nav-item"><router-link to="/orders">Ordini</router-link></span> -->
             </div>
             <div>
               <span class="nav-item"> <router-link to="/cart">
