@@ -7,11 +7,14 @@ export default {
     return {
       cartItemCount: 0,
       isCartEmpty: true,
-      isOpen: false
+      isOpen: false,
+      restaurant: null, // add a data property to store the restaurant
+
     };
   },
   mounted() {
     this.updateCartItemCount();
+    this.restaurant = JSON.parse(localStorage.getItem('restaurant')); // retrieve the restaurant from local storage
     eventBus.on('cart-updated', this.updateCartItemCount);
   },
   beforeDestroy() {

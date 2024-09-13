@@ -3,7 +3,7 @@ import { eventBus } from '@/eventBus';
 
 export default {
   name: 'Cart',
-  props: ['cart', 'restaurant'],
+  props: ['cart', 'restaurant'], // add restaurant to the props array
   data() {
     return {
       cart: [],
@@ -117,7 +117,7 @@ incrementQuantity(item) {
 <template>
   <div class="cart-container">
     <h1>Carrello </h1>
-  <p>Stai ordinando da:<h5>{{ restaurant.name }}</h5></p>
+    <p v-if="restaurant">Stai ordinando da: <h4>{{ restaurant.name }}</h4></p>
     <div id="confirm" style="display: none;">
     <p id="confirm-message"></p>
     <button class="m-1" id="yes-button">Sì</button>
