@@ -7,6 +7,8 @@ export default {
   data() {
     return {
       cart: [],
+      restaurant: null, // add a data property to store the restaurant
+
     };
   },
   computed: {
@@ -106,6 +108,8 @@ incrementQuantity(item) {
   mounted() {
     this.updateCart();
     eventBus.on('cart-updated', this.updateCart);
+    this.restaurant = JSON.parse(localStorage.getItem('restaurant')); // retrieve the restaurant from local storage
+
     window.addEventListener('beforeunload', this.leavePage);
   },
   beforeDestroy() {

@@ -15,6 +15,7 @@ export default {
   mounted() {
     this.updateCartItemCount();
     this.restaurant = JSON.parse(localStorage.getItem('restaurant')); // retrieve the restaurant from local storage
+    console.log("header",this.restaurant)
     eventBus.on('cart-updated', this.updateCartItemCount);
   },
   beforeDestroy() {
@@ -56,13 +57,15 @@ export default {
               <!-- <span class="nav-item"><router-link to="/orders">Ordini</router-link></span> -->
             </div>
             <div>
-              <span class="nav-item"> <router-link to="/cart">
-                  <i class="fa-solid fa-cart-shopping" style="font-size: 1.5rem;"></i>
-                  <span v-if="isCartEmpty"></span>
-                  <span v-else>
-                    Carrello <span class="cart-item-count">{{ cartItemCount }}</span>
-                  </span>
-                </router-link></span>
+              <span class="nav-item">
+  <router-link to="/cart" :restaurant="this.restaurant">
+    <i class="fa-solid fa-cart-shopping" style="font-size: 1.5rem;"></i>
+    <span v-if="isCartEmpty"></span>
+    <span v-else>
+      Carrello <span class="cart-item-count">{{ cartItemCount }}</span>
+    </span>
+  </router-link>
+</span>
             </div>
             <div>
               <span class="nav-item"><a href="http://127.0.0.1:8000/login">Accedi</a></span>
