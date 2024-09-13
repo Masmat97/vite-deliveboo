@@ -15,7 +15,7 @@
       <div class="input-group mb-3">
         <input type="number" class="form-control" v-model="quantity" min="1" max="10" ref="quantityInput">
         <div class="input-group-append">
-          <button class="btn btn-primary" @click="addToCart(dish, quantity)">Aggiungi al carrello</button>
+          <button class="btn btn-primary" @click="addToCart(dish, quantity)">+</button>
         </div>
       </div>
     </div>
@@ -35,68 +35,60 @@ export default {
   },
   methods: {
     addToCart(dish, quantity) {
-  const quantityInput = parseInt(this.$refs.quantityInput.value) || 1;
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      console.log('Adding to cart:', dish, quantity);
 
-  // Check if the cart is empty
-  if (cart.length === 0) {
-    // If empty, add the dish to the cart and set the restaurant ID
-    cart.push({
-      dish: dish,
-      quantity: quantityInput
-    });
-    localStorage.setItem('cart', JSON.stringify(cart));
-    eventBus.emit('cart-updated');
-  } else {
-    // If not empty, check if the dish is from the same restaurant as the first dish
-    const firstDish = cart[0].dish;
-    if (dish.restaurant_id === firstDish.restaurant_id) {
-      // If same restaurant, add the dish to the cart
-      const existingDish = cart.find(item => item.dish.id === dish.id);
-      if (existingDish) {
-        existingDish.quantity += quantityInput;
+      const quantityInput = parseInt(this.$refs.quantityInput.value) || 1;
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+      // Check if the cart is empty
+      if (cart.length === 0) {
+        // If empty, add the dish to the cart and set the restaurant ID
+        cart.push({
+          dish: dish,
+          quantity: quantityInput
+        });
+        localStorage.setItem('cart', JSON.stringify(cart));
+        eventBus.emit('cart-updated');
       } else {
-        cart.push({
-          dish: dish,
-          quantity: quantityInput
-        });
+        // If not empty, check if the dish is from the same restaurant as the first dish
+        const firstDish = cart[0].dish;
+        if (dish.restaurant_id === firstDish.restaurant_id) {
+          // If same restaurant, add the dish to the cart
+          const existingDish = cart.find(item => item.dish.id === dish.id);
+          if (existingDish) {
+            existingDish.quantity += quantityInput;
+          } else {
+            cart.push({
+              dish: dish,
+              quantity: quantityInput
+            });
+          }
+          localStorage.setItem('cart', JSON.stringify(cart));
+          eventBus.emit('cart-updated');
+        } else {
+          // If not same restaurant, display a confirmation alert
+          const confirmClearCart = confirm("Sei sicuro di voler cambiare ristorante? Il carrello precedente sarà svuotato.");
+          if (confirmClearCart) {
+            // Clear the cart
+            cart = [];
+            localStorage.setItem('cart', JSON.stringify(cart));
+            eventBus.emit('cart-updated');
+
+            // Add the new dish to the cart
+            cart.push({
+              dish: dish,
+              quantity: quantityInput
+            });
+            localStorage.setItem('cart', JSON.stringify(cart));
+            eventBus.emit('cart-updated');
+          } else {
+            // If user cancels, do nothing
+            console.log('Cart change cancelled');
+          }
+        }
       }
-      localStorage.setItem('cart', JSON.stringify(cart));
-      eventBus.emit('cart-updated');
-    } else {
-      // If not same restaurant, display a confirmation alert
-      const confirmBox = document.getElementById("confirm");
-      const message = "Sei sicuro di voler cambiare ristorante? Il carrello precedente sarà svuotato.";
-      document.getElementById("confirm-message").innerText = message;
-
-      const yesButton = document.getElementById("yes-button");
-      const noButton = document.getElementById("no-button");
-
-      yesButton.addEventListener("click", function() {
-        // Clear the cart
-        cart = [];
-        localStorage.setItem('cart', JSON.stringify(cart));
-        eventBus.emit('cart-updated');
-        
-        // Add the new dish to the cart
-        cart.push({
-          dish: dish,
-          quantity: quantityInput
-        });
-        localStorage.setItem('cart', JSON.stringify(cart));
-        eventBus.emit('cart-updated');
-        confirmBox.style.display = "none";
-      }.bind(this));
-
-      noButton.addEventListener("click", function() {
-        confirmBox.style.display = "none";
-      });
-
-      confirmBox.style.display = "block";
     }
   }
-}
-}
 }
 
 </script>
