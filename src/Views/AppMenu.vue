@@ -30,6 +30,7 @@ export default {
           // Retrieve the restaurant object from local storage
     const restaurant = JSON.parse(localStorage.getItem('restaurant'));
     this.restaurant = restaurant;
+    console.log("restaurant", this.restaurant)
     this.restaurant = restaurant;
         const storedRestaurant = localStorage.getItem('restaurant');
     if (storedRestaurant) {
