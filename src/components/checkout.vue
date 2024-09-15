@@ -24,8 +24,9 @@
             <img :src="item.dish.image" class="cart-item-image" alt="Product image">
             <div class="cart-item-details">
               <h5>{{ item.dish.name }}</h5>
-              <p>Prezzo: {{ item.dish.price }} €</p>
-              <p>Quantità: {{ item.quantity }}</p>
+              <p><strong>Prezzo:</strong> {{ item.dish.price }} €</p>
+              <p><strong>Ingredienti:</strong> {{ item.dish.ingredient }}</p>
+              <p><strong>Quantità:</strong> {{ item.quantity }}</p>
               <button type="button" class="btn btn-outline-primary" @click="decrementQuantity(item)">-</button>
               <button type="button" class="btn btn-outline-primary" @click="incrementQuantity(item)">+</button>
               <button type="button" class="btn btn-outline-danger" @click="removeItemFromCart(item)">Rimuovi</button>
@@ -34,10 +35,6 @@
         </div>
       </div>
     </div>
-
-
-
-
     <div class="row">
       <div class="col-xl-3 col-lg-4 col-md-6 border border-danger mt-2 ">
         <div class="p-2">
@@ -47,7 +44,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -161,7 +157,6 @@ export default {
             eventBus.emit('cart-updated');
             confirmBox.style.display = "none";
           });
-
           noButton.addEventListener("click", function () {
             existingItem.quantity = 1;
             confirmBox.style.display = "none";
@@ -215,6 +210,7 @@ export default {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+
 }
 
 .cart-item-image {
