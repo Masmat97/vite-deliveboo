@@ -150,92 +150,51 @@ export default {
   methods: {
 
     validateForm() {
-
       // Validazione del nome
-
       if (this.formData.name.trim() === '') {
-
         this.nomeIsValid = false
-
       } else {
-
         this.nomeIsValid = true
-
       }
-
 
       // Validazione dell'email
-
       const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-
       if (!emailRegex.test(this.formData.email)) {
-
         this.emailIsValid = false
-
       } else {
-
         this.emailIsValid = true
-
       }
-
 
       // Validazione dell'indirizzo
-
       if (this.formData.address.trim() === '') {
-
         this.indirizzoIsValid = false
-
       } else {
-
         this.indirizzoIsValid = true
-
       }
-
 
       // Validazione del numero di telefono
-
       const phoneRegex = /^\d{3}-\d{3}-\d{4}$/
-
       if (!phoneRegex.test(this.formData.phone_number)) {
-
         this.telefonoIsValid = false
-
       } else {
-
         this.telefonoIsValid = true
-
       }
-
 
       // Validazione del numero carta
-
       const cardRegex = /^\d{16}$/
-
       if (!cardRegex.test(this.formData.numb_card)) {
-
         this.numbCardIsValid = false
-
       } else {
-
         this.numbCardIsValid = true
-
       }
-
 
       // Se tutte le proprietà di validazione sono true, il form è valido
-
       if (this.nomeIsValid && this.emailIsValid && this.indirizzoIsValid && this.telefonoIsValid && this.numbCardIsValid) {
-
         // Esegui l'azione di submit del form
-
         console.log('Form valido!')
-
       } else {
-
         console.log('Form non valido!')
-
       }
-
     },
 
     updateCart() {
@@ -251,6 +210,8 @@ export default {
           console.log(response.data);
           // Naviga all'URL del checkout Laravel
           window.location.href = 'http://localhost:5174/thanks';
+          localStorage.removeItem('cart');
+          this.cart = [];
         })
         .catch(error => {
           console.error("There was an error processing the payment", error);
@@ -356,7 +317,7 @@ export default {
       noButton.addEventListener("click", function () {
         confirmBox.style.display = "none";
       });
-    }
+    },
   },
   mounted() {
     this.updateCart();
