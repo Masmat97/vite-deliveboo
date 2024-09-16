@@ -22,17 +22,17 @@ export default {
     },
     methods: {
         getRestaurants() {
-        const url = `${this.base_url}api/restaurants?page=${this.currentPage}`
-        axios.get(url).then(response => {
-            this.restaurants = response.data.restaurants
-            this.filteredRestaurants = this.restaurants.data.map(restaurant => ({
-                ...restaurant,
-                slug: restaurant.name.toLowerCase().replace(/\s+/g, '-')
-            }))
-            this.totalPages = response.data.restaurants.last_page // get the total number of pages
-            console.log(response);
-        })
-    },
+            const url = `${this.base_url}api/restaurants?page=${this.currentPage}`
+            axios.get(url).then(response => {
+                this.restaurants = response.data.restaurants
+                this.filteredRestaurants = this.restaurants.data.map(restaurant => ({
+                    ...restaurant,
+                    slug: restaurant.name.toLowerCase().replace(/\s+/g, '-')
+                }))
+                this.totalPages = response.data.restaurants.last_page // get the total number of pages
+                console.log(response);
+            })
+        },
         getTypes() {
             axios.get(`${this.base_url}api/types`).then(response => {
                 this.types = response.data.types;
@@ -103,9 +103,9 @@ export default {
                         <div class="card-body">
 
                             <h5 class="card-title">{{ restaurant.name }}</h5>
-                        <router-link :to="{ name: 'restaurant', params: { slug: restaurant.slug } }">
-  <a class="my-3 btn btn-danger" href="#" role="button">Visualizza Menù</a>
-</router-link>
+                            <router-link :to="{ name: 'restaurant', params: { slug: restaurant.slug } }">
+                                <a class="my-3 btn btn-danger" href="#" role="button">Visualizza Menù</a>
+                            </router-link>
 
                             <p>
                             <ul class="d-flex gap-3 flex-wrap">
@@ -118,29 +118,32 @@ export default {
             </div>
         </div>
         <div class="row">
-    <div class="col-xl-12 col-lg-12 col-md-12 d-flex justify-content-center">
+            <div class="col-xl-12 col-lg-12 col-md-12 d-flex justify-content-center">
 
-        <div class="pagination m-3 d-flex align-items-center gap-3">
+                <div class="pagination m-3 d-flex align-items-center gap-3">
 
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    <li class="page-item"><span class="page-link" @click="prevPage"><i class="fa-solid fa-chevron-left"></i></span></li>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item"><span class="page-link" @click="prevPage"><i
+                                        class="fa-solid fa-chevron-left"></i></span></li>
 
-                    <li class="page-item"><span class="page-link">Pagina {{ currentPage }} di {{ totalPages }}</span></li>
-                    <li class="page-item"><span class="page-link" @click="nextPage"><i class="fa-solid fa-chevron-right"></i></span></li>
-                </ul>
-            </nav>
+                            <li class="page-item"><span class="page-link">Pagina {{ currentPage }} di {{ totalPages
+                                    }}</span></li>
+                            <li class="page-item"><span class="page-link" @click="nextPage"><i
+                                        class="fa-solid fa-chevron-right"></i></span></li>
+                        </ul>
+                    </nav>
 
+                </div>
+            </div>
         </div>
-    </div>
-</div>
     </div>
 
     <div class="container-fluid">
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 bg-dark d-flex flex-row p-4 mb-5 d-flex justify-content-center">
 
-                <div class="col-xl-4 col-lg-4 col-md-4 text-white d-flex flex-column">
+                <div class="col-xl-3 col-lg-3 col-md-3 text-white d-flex flex-column">
                     <h4>Porta DeliveBoo sempre con te!</h4>
                     <span>Scarica la nostra App per Smartphone</span>
                     <button type="button" class="btn btn-light mt-3 rounded-pill" style="width: 10rem;">
@@ -153,7 +156,9 @@ export default {
 
                 <div class="col-xl-4 col-lg-4 col-md-4">
 
-                    <div class="app_store"></div>
+                    <div class="app_store">
+                        <img src="../assets/img/app.jpg" alt="">
+                    </div>
                 </div>
 
             </div>
@@ -211,15 +216,10 @@ li {
 }
 
 .app_store {
-    background-image: url(../assets/img/app.jpg);
-    background-size: cover;
-    background-repeat: no-repeat;
-    width: 15rem;
-    height: 15rem;
-    border-radius: 10%;
-    margin-left: 10rem;
-    box-shadow: 0px 5px 5px rgba(255, 255, 255, 0.3);
+    width: 10rem;
+    border-radius: 1rem;
 }
+
 .pagination {
     justify-content: center;
     margin-top: 20px;
