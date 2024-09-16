@@ -250,7 +250,7 @@ export default {
         .then(response => {
           console.log(response.data);
           // Naviga all'URL del checkout Laravel
-          // window.location.href = 'http://127.0.0.1:8000/checkout';
+          window.location.href = 'http://localhost:5174/thanks';
         })
         .catch(error => {
           console.error("There was an error processing the payment", error);
