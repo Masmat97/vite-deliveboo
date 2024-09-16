@@ -104,7 +104,7 @@
                   </select>
                 </div>
               </div>
-              <div class="row">
+              <div class="row w-100 margin">
                 <div class="col-12 rounded-3 border border-danger mt-2 mx-2">
                   <div class="p-2">
                     <p>Total: {{ cartTotal }} €</p>
