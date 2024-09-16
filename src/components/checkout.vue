@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid cart-container">
     <div class="row">
-      <div class="col-xl-3 col-lg-4 col-md-5 border border-danger ">
+      <div class="col-12 border border-danger ">
         <h1 class="">Riepilogo Ordini</h1>
         <p v-if="restaurant">Stai ordinando da:
         <h4>{{ restaurant.name }}</h4>
@@ -16,34 +16,109 @@
           <p id="info-message"></p>
           <button class="m-1 btn btn-primary" id="okey-button">Chiudi</button>
         </div>
-        <div v-if="cart.length === 0" class="empty-cart">
-          <p>Il carrello è vuoto</p>
-        </div>
-        <div v-else>
-          <div v-for="item in cart" :key="item.dish.id" class="cart-item">
-            <img :src="item.dish.image" class="cart-item-image" alt="Product image">
-            <div class="cart-item-details">
-              <h5>{{ item.dish.name }}</h5>
-              <p><strong>Prezzo:</strong> {{ item.dish.price }} €</p>
-              <p><strong>Ingredienti:</strong> {{ item.dish.ingredient }}</p>
-              <p><strong>Quantità:</strong> {{ item.quantity }}</p>
-              <button type="button" class="btn btn-outline-primary" @click="decrementQuantity(item)">-</button>
-              <button type="button" class="btn btn-outline-primary" @click="incrementQuantity(item)">+</button>
-              <button type="button" class="btn btn-outline-danger" @click="removeItemFromCart(item)">Rimuovi</button>
+
+        <div class="row">
+          <div class="col-md-6 col-sm-12 my-3">
+            <div v-if="cart.length === 0" class="empty-cart">
+              <p>Il carrello è vuoto</p>
             </div>
+            <div v-else>
+              <div v-for="item in cart" :key="item.dish.id" class="cart-item">
+                <img :src="item.dish.image" class="cart-item-image" alt="Product image">
+                <div class="cart-item-details">
+                  <h5>{{ item.dish.name }}</h5>
+                  <p><strong>Prezzo:</strong> {{ item.dish.price }} €</p>
+                  <p><strong>Ingredienti:</strong> {{ item.dish.ingredient }}</p>
+                  <p><strong>Quantità:</strong> {{ item.quantity }}</p>
+                  <button type="button" class="btn btn-outline-primary" @click="decrementQuantity(item)">-</button>
+                  <button type="button" class="btn btn-outline-primary" @click="incrementQuantity(item)">+</button>
+                  <button type="button" class="btn btn-outline-danger"
+                    @click="removeItemFromCart(item)">Rimuovi</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-12 my-3">
+            <form @submit.prevent="validateForm" id="user-form" @keydown.enter.prevent="validateForm">
+              <div class="form-group">
+                <label for="name">Nome:</label>
+                <input type="text" class="form-control" id="name" name="name" v-model="formData.name"
+                  :class="{ 'is-invalid': !nomeIsValid }" required>
+              </div>
+              <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" name="email" v-model="formData.email"
+                  :class="{ 'is-invalid': !emailIsValid }" required>
+              </div>
+              <div class="form-group">
+                <label for="address">Indirizzo:</label>
+                <input type="text" class="form-control" id="address" name="address" v-model="formData.address"
+                  :class="{ 'is-invalid': !indirizzoIsValid }" required>
+              </div>
+              <div class="form-group">
+                <label for="phone_number">Numero di telefono:</label>
+                <input type="tel" class="form-control" id="phone_number" name="phone_number"
+                  v-model="formData.phone_number" :class="{ 'is-invalid': !telefonoIsValid }" required>
+              </div>
+
+              <div class="form-group">
+                <label for="numb-card">Numero carta:</label>
+                <input type="tel" class="form-control" :class="{ 'is-invalid': !telefonoIsValid }" required>
+              </div>
+
+              <div class="form-group">
+                <label for="numb-card">Scadenza Carta:</label>
+                <div class="form-control" :class="{ 'is-invalid': !telefonoIsValid }">
+                  <select id="month" name="month" required>
+
+                    <option value="12">Dicembre</option>
+                    <option value="02">Novembre</option>
+                    <option value="02">Ottobre</option>
+                    <option value="02">Settembre</option>
+                    <option value="02">Agosto</option>
+                    <option value="02">Luglio</option>
+                    <option value="02">Giugno</option>
+                    <option value="02">Maggio</option>
+                    <option value="02">Aprile</option>
+                    <option value="02">Marzo</option>
+                    <option value="02">Febbraio</option>
+                    <option value="01">Gennaio</option>
+
+                  </select>
+
+                  <select id="year" name="year" required>
+
+                    <option value="2022">2024</option>
+                    <option value="2022">2025</option>
+                    <option value="2023">2026</option>
+                    <option value="2023">2027</option>
+                    <option value="2023">2028</option>
+                    <option value="2023">2029</option>
+                    <option value="2023">2030</option>
+                    <option value="2023">2031</option>
+                    <option value="2023">2032</option>
+                    <option value="2023">2033</option>
+                    <option value="2023">2034</option>
+
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12 rounded-3 border border-danger mt-2 mx-2">
+                  <div class="p-2">
+                    <p>Total: {{ cartTotal }} €</p>
+                    <button class="btn btn-primary m-0" @click="proceedToPayment">Procedi al pagamento</button>
+                    <button class="btn btn-danger" @click="emptyCart">Svuota carrello</button>
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-xl-3 col-lg-4 col-md-6 border border-danger mt-2 ">
-        <div class="p-2">
-          <p>Total: {{ cartTotal }} €</p>
-          <button class="btn btn-primary m-0" @click="proceedToPayment">Procedi al pagamento</button>
-          <button class="btn btn-danger" @click="emptyCart">Svuota carrello</button>
-        </div>
-      </div>
-    </div>
+
   </div>
 </template>
 
@@ -57,15 +132,112 @@ export default {
     return {
       cart: [],
       restaurant: null, // add a data property to store the restaurant
-
+      formData: {
+        name: '',
+        email: '',
+        address: '',
+        phone_number: ''
+      },
+      totalCart: ''
     };
   },
   computed: {
     cartTotal() {
-      return this.cart.reduce((total, item) => total + item.dish.price * item.quantity, 0).toFixed(2);
+      this.totalCart = this.cart.reduce((total, item) => total + item.dish.price * item.quantity, 0).toFixed(2);
+      return this.totalCart;
     }
   },
   methods: {
+
+    validateForm() {
+
+      // Validazione del nome
+
+      if (this.formData.name.trim() === '') {
+
+        this.nomeIsValid = false
+
+      } else {
+
+        this.nomeIsValid = true
+
+      }
+
+
+      // Validazione dell'email
+
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+
+      if (!emailRegex.test(this.formData.email)) {
+
+        this.emailIsValid = false
+
+      } else {
+
+        this.emailIsValid = true
+
+      }
+
+
+      // Validazione dell'indirizzo
+
+      if (this.formData.address.trim() === '') {
+
+        this.indirizzoIsValid = false
+
+      } else {
+
+        this.indirizzoIsValid = true
+
+      }
+
+
+      // Validazione del numero di telefono
+
+      const phoneRegex = /^\d{3}-\d{3}-\d{4}$/
+
+      if (!phoneRegex.test(this.formData.phone_number)) {
+
+        this.telefonoIsValid = false
+
+      } else {
+
+        this.telefonoIsValid = true
+
+      }
+
+
+      // Validazione del numero carta
+
+      const cardRegex = /^\d{16}$/
+
+      if (!cardRegex.test(this.formData.numb_card)) {
+
+        this.numbCardIsValid = false
+
+      } else {
+
+        this.numbCardIsValid = true
+
+      }
+
+
+      // Se tutte le proprietà di validazione sono true, il form è valido
+
+      if (this.nomeIsValid && this.emailIsValid && this.indirizzoIsValid && this.telefonoIsValid && this.numbCardIsValid) {
+
+        // Esegui l'azione di submit del form
+
+        console.log('Form valido!')
+
+      } else {
+
+        console.log('Form non valido!')
+
+      }
+
+    },
+
     updateCart() {
       this.cart = JSON.parse(localStorage.getItem('cart')) || [];
       console.log(this.cart)
@@ -73,12 +245,12 @@ export default {
     proceedToPayment() {
       console.log("Attempting to proceed to payment");
       // Simula una chiamata API per processare il pagamento
-      const data = this.cart;
+      const data = [this.cart, this.formData, this.totalCart];
       axios.post('http://127.0.0.1:8000/api/payment', data)
         .then(response => {
           console.log(response.data);
           // Naviga all'URL del checkout Laravel
-          window.location.href = 'http://127.0.0.1:8000/checkout';
+          // window.location.href = 'http://127.0.0.1:8000/checkout';
         })
         .catch(error => {
           console.error("There was an error processing the payment", error);
@@ -197,6 +369,13 @@ export default {
 }
 </script>
 <style scoped>
+select {
+  background-color: white;
+  border: 0px;
+  width: 6rem;
+  text-align: center;
+}
+
 .cart-container {
   padding: 20px;
 }

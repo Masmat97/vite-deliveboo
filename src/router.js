@@ -12,6 +12,7 @@ import AppCookies from "./Views/AppCookies.vue";
 import AppFaq from "./Views/AppFaq.vue";
 import Cart from './components/Cart.vue'; // Importa il componente del carrello
 import Checkout from './components/checkout.vue'; // Importa il componente del checkout
+import AppThanksOrder from './Views/AppThanksOrder.vue';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -75,6 +76,11 @@ const router = createRouter({
             path: '/checkout',
             name: 'checkout',
             component: Checkout
+        },
+        {
+            path: '/thanks',
+            name: 'thanks',
+            component: AppThanksOrder
         },
         {
             path: '/:pathMatch(.*)*',
