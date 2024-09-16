@@ -3,12 +3,10 @@ import { eventBus } from '@/eventBus';
 
 export default {
   name: 'Cart',
-  props: ['cart', 'restaurant'], // add restaurant to the props array
   data() {
     return {
       cart: [],
-      restaurant: null, // add a data property to store the restaurant
-
+      restaurant: null,
     };
   },
   computed: {
@@ -19,55 +17,53 @@ export default {
   methods: {
     updateCart() {
       this.cart = JSON.parse(localStorage.getItem('cart')) || [];
+      this.restaurant = JSON.parse(localStorage.getItem('restaurant')) || null; // Aggiungi l'aggiornamento del nome del ristorante
     },
     removeItemFromCart(item) {
-  const confirmBox = document.getElementById("confirm");
-  confirmBox.style.display = "block";
-  const message = `Rimuovere ${item.dish.name} dal carrello?`;
-  document.getElementById("confirm-message").innerText = message;
-
-  // Add event listeners to the confirm box buttons
-  const yesButton = document.getElementById("yes-button");
-  const noButton = document.getElementById("no-button");
-
-  yesButton.addEventListener("click", function() {
-    const index = this.cart.findIndex(cartItem => cartItem.dish.id === item.dish.id);
-    if (index !== -1) {
-      this.cart.splice(index, 1);
-      localStorage.setItem('cart', JSON.stringify(this.cart));
-      this.updateCart();
-      eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
-    }
-    confirmBox.style.display = "none";
-  }.bind(this));
-
-  noButton.addEventListener("click", function() {
-    confirmBox.style.display = "none";
-  });
-},
-incrementQuantity(item) {
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
-  const existingItem = cart.find(cartItem => cartItem.dish.id === item.dish.id);
-  if (existingItem) {
-    if (existingItem.quantity >= 15) {
-      const message = "Quantità massima raggiunta. Non puoi aggiungere più di 15 piatti.";
-      const confirmBox = document.getElementById("info");
-      document.getElementById("info-message").innerText = message;
+      const confirmBox = document.getElementById("confirm");
       confirmBox.style.display = "block";
+      const message = `Rimuovere ${item.dish.name} dal carrello?`;
+      document.getElementById("confirm-message").innerText = message;
 
-      // Add an event listener to the close button
-      const closeButton = document.getElementById("okey-button");
-      closeButton.addEventListener("click", function() {
+      const yesButton = document.getElementById("yes-button");
+      const noButton = document.getElementById("no-button");
+
+      yesButton.addEventListener("click", () => {
+        const index = this.cart.findIndex(cartItem => cartItem.dish.id === item.dish.id);
+        if (index !== -1) {
+          this.cart.splice(index, 1);
+          localStorage.setItem('cart', JSON.stringify(this.cart));
+          this.updateCart();
+          eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
+        }
         confirmBox.style.display = "none";
-      }.bind(this));
+      });
 
-      return;
-    }
-    existingItem.quantity++;
-    localStorage.setItem('cart', JSON.stringify(cart));
-    eventBus.emit('cart-updated');
-  }
-},
+      noButton.addEventListener("click", () => {
+        confirmBox.style.display = "none";
+      });
+    },
+    incrementQuantity(item) {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const existingItem = cart.find(cartItem => cartItem.dish.id === item.dish.id);
+      if (existingItem) {
+        if (existingItem.quantity >= 15) {
+          const message = "Quantità massima raggiunta. Non puoi aggiungere più di 15 piatti.";
+          const confirmBox = document.getElementById("info");
+          document.getElementById("info-message").innerText = message;
+          confirmBox.style.display = "block";
+
+          const closeButton = document.getElementById("okey-button");
+          closeButton.addEventListener("click", () => {
+            confirmBox.style.display = "none";
+          });
+          return;
+        }
+        existingItem.quantity++;
+        localStorage.setItem('cart', JSON.stringify(cart));
+        eventBus.emit('cart-updated');
+      }
+    },
     decrementQuantity(item) {
       const cart = JSON.parse(localStorage.getItem('cart')) || [];
       const existingItem = cart.find(cartItem => cartItem.dish.id === item.dish.id);
@@ -82,11 +78,10 @@ incrementQuantity(item) {
           const message = `Rimuovere ${item.dish.name} dal carrello?`;
           document.getElementById("confirm-message").innerText = message;
 
-          // Add event listeners to the confirm box buttons
           const yesButton = document.getElementById("yes-button");
           const noButton = document.getElementById("no-button");
 
-          yesButton.addEventListener("click", function() {
+          yesButton.addEventListener("click", () => {
             const index = cart.indexOf(existingItem);
             cart.splice(index, 1);
             localStorage.setItem('cart', JSON.stringify(cart));
@@ -94,7 +89,7 @@ incrementQuantity(item) {
             confirmBox.style.display = "none";
           });
 
-          noButton.addEventListener("click", function() {
+          noButton.addEventListener("click", () => {
             existingItem.quantity = 1;
             confirmBox.style.display = "none";
           });
@@ -108,30 +103,29 @@ incrementQuantity(item) {
   mounted() {
     this.updateCart();
     eventBus.on('cart-updated', this.updateCart);
-    this.restaurant = JSON.parse(localStorage.getItem('restaurant')); // retrieve the restaurant from local storage
-
     window.addEventListener('beforeunload', this.leavePage);
   },
   beforeDestroy() {
+    eventBus.off('cart-updated', this.updateCart);
     window.removeEventListener('beforeunload', this.leavePage);
   }
 }
 </script>
-          
+
 <template>
   <div class="cart-container">
-    <h1>Carrello </h1>
+    <h1>Carrello</h1>
     <p v-if="restaurant">Stai ordinando da: <h4>{{ restaurant.name }}</h4></p>
     <div id="confirm" style="display: none;">
-    <p id="confirm-message"></p>
-    <button class="m-1" id="yes-button">Sì</button>
-    <button class="m-1" id="no-button">No</button>
-  </div>
-  <!-- alert -->
-  <div id="info" style="display: none;">
-    <p id="info-message"></p>
-    <button class="m-1 btn btn-primary" id="okey-button">Chiudi</button>
-  </div>
+      <p id="confirm-message"></p>
+      <button class="m-1" id="yes-button">Sì</button>
+      <button class="m-1" id="no-button">No</button>
+    </div>
+    <!-- alert -->
+    <div id="info" style="display: none;">
+      <p id="info-message"></p>
+      <button class="m-1 btn btn-primary" id="okey-button">Chiudi</button>
+    </div>
     <div v-if="cart.length === 0" class="empty-cart">
       <p>Il carrello è vuoto</p>
     </div>
@@ -149,8 +143,7 @@ incrementQuantity(item) {
       </div>
       <div class="cart-summary">
         <p><b>Total: {{ cartTotal }} €</b></p>
-        <RouterLink :to="{ name: 'checkout', params: { restaurant: restaurant } }" class="btn btn-primary mt-auto">Completa l'ordine
-        </RouterLink>
+        <RouterLink :to="{ name: 'checkout', params: { restaurant: restaurant } }" class="btn btn-primary mt-auto">Completa l'ordine</RouterLink>
       </div>
     </div>
   </div>
