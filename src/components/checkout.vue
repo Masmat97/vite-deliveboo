@@ -152,59 +152,79 @@ export default {
   methods: {
 
     validateForm() {
-      // Validazione del nome
-      if (this.formData.name.trim() === '') {
-        this.nomeIsValid = false
-      } else {
-        this.nomeIsValid = true
-      }
+  // Validazione del nome
+  if (this.formData.name.trim() === '') {
+    this.nomeIsValid = false
+  } else {
+    this.nomeIsValid = true
+  }
 
-      // Validazione dell'email
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-      if (!emailRegex.test(this.formData.email)) {
-        this.emailIsValid = false
-      } else {
-        this.emailIsValid = true
-      }
+  // Validazione dell'email
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+  if (!emailRegex.test(this.formData.email)) {
+    this.emailIsValid = false
+  } else {
+    this.emailIsValid = true
+  }
 
-      // Validazione dell'indirizzo
-      if (this.formData.address.trim() === '') {
-        this.indirizzoIsValid = false
-      } else {
-        this.indirizzoIsValid = true
-      }
+  // Validazione dell'indirizzo
+  if (this.formData.address.trim() === '') {
+    this.indirizzoIsValid = false
+  } else {
+    this.indirizzoIsValid = true
+  }
 
-      // Validazione del numero di telefono
-      const phoneRegex = /^\d{3}-\d{3}-\d{4}$/
-      if (!phoneRegex.test(this.formData.phone_number)) {
-        this.telefonoIsValid = false
-      } else {
-        this.telefonoIsValid = true
-      }
+  // Validazione del numero di telefono
+  const phoneRegex = /^\d{3}-\d{3}-\d{4}$/
+  if (!phoneRegex.test(this.formData.phone_number)) {
+    this.telefonoIsValid = false
+  } else {
+    this.telefonoIsValid = true
+  }
 
-      // Validazione del numero carta
-      const cardRegex = /^\d{16}$/
-      if (!cardRegex.test(this.formData.numb_card)) {
-        this.numbCardIsValid = false
-      } else {
-        this.numbCardIsValid = true
-      }
+  // Validazione del numero carta
+  const cardRegex = /^\d{16}$/
+  if (!cardRegex.test(this.formData.numb_card)) {
+    this.numbCardIsValid = false
+  } else {
+    this.numbCardIsValid = true
+  }
 
-      // Se tutte le proprietà di validazione sono true, il form è valido
-      if (this.nomeIsValid && this.emailIsValid && this.indirizzoIsValid && this.telefonoIsValid && this.numbCardIsValid) {
-        // Esegui l'azione di submit del form
-        console.log('Form valido!')
-      } else {
-        console.log('Form non valido!')
-      }
-    },
+  // Se tutte le proprietà di validazione sono true, il form è valido
+  if (this.nomeIsValid && this.emailIsValid && this.indirizzoIsValid && this.telefonoIsValid && this.numbCardIsValid) {
+    // Esegui l'azione di submit del form
+    Swal.fire({
+      icon: 'success',
+      title: 'Form valido!',
+      text: 'Il tuo form è stato inviato con successo!',
+      confirmButtonText: 'OK'
+    })
+  } else {
+    Swal.fire({
+      icon: 'error',
+      title: 'Form non valido!',
+      text: 'Per favore, controlla i campi del form e riprova.',
+      confirmButtonText: 'OK'
+    })
+  }
+},
 
     updateCart() {
       this.cart = JSON.parse(localStorage.getItem('cart')) || [];
       console.log(this.cart)
     },
     proceedToPayment() {
-      console.log("Attempting to proceed to payment");
+  console.log("Attempting to proceed to payment");
+  // Mostra un messaggio di conferma prima di procedere al pagamento
+  Swal.fire({
+    title: 'Conferma pagamento',
+    text: 'Sei sicuro di voler procedere al pagamento?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sì, procedi al pagamento',
+    cancelButtonText: 'No, annulla'
+  }).then((result) => {
+    if (result.isConfirmed) {
       // Simula una chiamata API per processare il pagamento
       const data = [this.cart, this.formData, this.totalCart];
       axios.post('http://127.0.0.1:8000/api/payment', data)
@@ -218,7 +238,9 @@ export default {
         .catch(error => {
           console.error("There was an error processing the payment", error);
         });
-    },
+    }
+  });
+},
     removeItemFromCart(item) {
     Swal.fire({
       title: 'Rimuovere dal carrello?',
@@ -289,27 +311,23 @@ export default {
       }
     }
   },
-    emptyCart() {
-      const confirmBox = document.getElementById("confirm");
-      confirmBox.style.display = "block";
-      const message = `Sei sicuro di svuotare il carrello?`;
-      document.getElementById("confirm-message").innerText = message;
-
-      // Add event listeners to the confirm box buttons
-      const yesButton = document.getElementById("yes-button");
-      const noButton = document.getElementById("no-button");
-
-      yesButton.addEventListener("click", function () {
-        localStorage.removeItem('cart');
-        this.cart = [];
-        eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
-        confirmBox.style.display = "none";
-      }.bind(this));
-
-      noButton.addEventListener("click", function () {
-        confirmBox.style.display = "none";
-      });
-    },
+  emptyCart() {
+  Swal.fire({
+    title: 'Svuota carrello',
+    text: 'Sei sicuro di voler svuotare il carrello?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sì, svuota carrello',
+    cancelButtonText: 'No, annulla'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      localStorage.removeItem('cart');
+      this.cart = [];
+      eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
+      this.restaurant = null; // Imposta il valore di restaurant a null
+    }
+  });
+},
   },
   mounted() {
     this.updateCart();

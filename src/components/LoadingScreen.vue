@@ -1,18 +1,18 @@
 <template>
-    <div class="loading-screen">
-      <div class="loading-content">
-        <img src="../assets/img/logo_deliveboo.png" alt="Logo" />
-        <p>Loading</p>
-        <div class="loading-dots">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
+  <div class="loading-screen">
+    <div class="loading-content">
+      <img src="../assets/img/logo_deliveboo.png" alt="Logo" class="loading-logo" />
+      <p>Loading</p>
+      <div class="loading-dots">
+        <span></span>
+        <span></span>
+        <span></span>
       </div>
     </div>
-  </template>
-  
-  <style scoped>
+  </div>
+</template>
+
+<style scoped>
   .loading-screen {
     position: fixed;
     top: 0;
@@ -28,6 +28,13 @@
   
   .loading-content {
     text-align: center;
+  }
+  
+  .loading-logo {
+    width: 15rem; /* impostare la larghezza dell'immagine */
+    height: 12rem; /* impostare l'altezza dell'immagine */
+    animation: logo-animation 2s infinite; /* aggiungere l'animazione */
+    margin-bottom: 3rem;
   }
   
   .loading-dots {
@@ -57,6 +64,18 @@
     animation-delay: 1s;
   }
   
+  @keyframes logo-animation {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
   @keyframes loading-dot {
     0% {
       transform: translateY(0);
@@ -68,4 +87,4 @@
       transform: translateY(0);
     }
   }
-  </style>
+</style>
