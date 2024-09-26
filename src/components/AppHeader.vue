@@ -1,14 +1,18 @@
 <script>
 import { eventBus } from '@/eventBus';
+import LoadingScreen from './LoadingScreen.vue';
 
 export default {
   name: 'AppHeader',
+  components: { LoadingScreen },
+
   data() {
     return {
       cartItemCount: 0,
       isCartEmpty: true,
       isOpen: false,
       restaurant: null, // add a data property to store the restaurant
+      loading: false,
 
     };
   },
@@ -26,7 +30,19 @@ export default {
       const cart = JSON.parse(localStorage.getItem('cart')) || [];
       this.cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
       this.isCartEmpty = this.cartItemCount === 0;
-    }
+    },
+    showLoadingScreen(type, event) {
+      event.preventDefault();
+      this.loading = true;
+      setTimeout(() => {
+        this.loading = false;
+        if (type === 'home') {
+          this.$router.push({ name: 'home' });
+        } else if (type === 'cart') {
+          this.$router.push({ name: 'cart' });
+        }
+      }, 1500);
+    },
   }
 }
 </script>
@@ -53,12 +69,14 @@ export default {
           <div class="menu-mobile  d-flex justify-content-between">
 
             <div>
-              <span class="nav-item"><router-link to="/">Home</router-link></span>
-              <!-- <span class="nav-item"><router-link to="/orders">Ordini</router-link></span> -->
-            </div>
-            <div>
               <span class="nav-item">
-  <router-link to="/cart" :restaurant="this.restaurant">
+  <router-link to="/" @click="showLoadingScreen('home', $event)">
+    Home
+  </router-link>
+</span>
+
+<span class="nav-item">
+  <router-link to="/cart" @click="showLoadingScreen('cart', $event)" :restaurant="this.restaurant">
     <i class="fa-solid fa-cart-shopping" style="font-size: 1.5rem;"></i>
     <span v-if="isCartEmpty"></span>
     <span v-else>
@@ -66,6 +84,7 @@ export default {
     </span>
   </router-link>
 </span>
+
             </div>
             <div>
               <span class="nav-item"><a href="http://127.0.0.1:8000/login">Accedi</a></span>
@@ -76,7 +95,7 @@ export default {
       </div>
     </div>
   </nav>
-
+  <LoadingScreen v-if="loading" />
 
 
 </template>

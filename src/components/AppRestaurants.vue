@@ -1,9 +1,10 @@
 <script>
 import axios from 'axios';
+import LoadingScreen from './LoadingScreen.vue';
 
 export default {
     name: 'AppRestaurants',
-
+    components: { LoadingScreen },
     data() {
         return {
             base_url: 'http://localhost:8000/',
@@ -13,7 +14,8 @@ export default {
             filteredRestaurants: '',
             currentPage: 1, // add this to keep track of the current page
             totalPages: 0, // add this to store the total number of pages
-            isOpen: false
+            isOpen: false,
+            loading: false,
         }
     },
     mounted() {
@@ -64,13 +66,22 @@ export default {
                 this.currentPage--
                 this.searchRestaurants()
             }
-        }
+        },
+        showLoadingScreen(restaurant, event) {
+            event.preventDefault();
+            this.loading = true;
+            setTimeout(() => {
+                this.loading = false;
+                this.$router.push({ name: 'restaurant', params: { slug: restaurant.slug } });
+            }, 1500);
+        },
     }
 }
 </script>
 
 <template>
     <div class="container-fluid">
+        <LoadingScreen v-if="loading" />
         <div class="row">
 
             <div class="col-xl-2 col-lg-3 col-md-4 mt-5">
@@ -104,7 +115,8 @@ export default {
 
                             <h5 class="card-title">{{ restaurant.name }}</h5>
                             <router-link :to="{ name: 'restaurant', params: { slug: restaurant.slug } }">
-                                <a class="my-3 btn btn-danger" href="#" role="button">Visualizza Menù</a>
+                                <a class="my-3 btn btn-danger" href="#" role="button"
+                                    @click="showLoadingScreen(restaurant, $event)">Visualizza Menù</a>
                             </router-link>
 
                             <p>
@@ -164,15 +176,6 @@ export default {
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
-
-
 </template>
 
 <style scoped>
