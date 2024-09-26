@@ -125,6 +125,8 @@
 <script>
 import { eventBus } from '@/eventBus';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+
 
 export default {
   name: 'Checkout',
@@ -218,16 +220,17 @@ export default {
         });
     },
     removeItemFromCart(item) {
-      const confirmBox = document.getElementById("confirm");
-      confirmBox.style.display = "block";
-      const message = `Rimuovere ${item.dish.name} dal carrello?`;
-      document.getElementById("confirm-message").innerText = message;
-
-      // Add event listeners to the confirm box buttons
-      const yesButton = document.getElementById("yes-button");
-      const noButton = document.getElementById("no-button");
-
-      yesButton.addEventListener("click", function () {
+    Swal.fire({
+      title: 'Rimuovere dal carrello?',
+      text: `Rimuovere ${item.dish.name} dal carrello?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sì',
+      cancelButtonText: 'No'
+    }).then((result) => {
+      if (result.isConfirmed) {
         const index = this.cart.findIndex(cartItem => cartItem.dish.id === item.dish.id);
         if (index !== -1) {
           this.cart.splice(index, 1);
@@ -235,68 +238,57 @@ export default {
           this.updateCart();
           eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
         }
-        confirmBox.style.display = "none";
-      }.bind(this));
-
-      noButton.addEventListener("click", function () {
-        confirmBox.style.display = "none";
-      });
-    },
-    incrementQuantity(item) {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const existingItem = cart.find(cartItem => cartItem.dish.id === item.dish.id);
-      if (existingItem) {
-        if (existingItem.quantity >= 15) {
-          const message = "Quantità massima raggiunta. Non puoi aggiungere più di 15 piatti.";
-          const confirmBox = document.getElementById("info");
-          document.getElementById("info-message").innerText = message;
-          confirmBox.style.display = "block";
-
-          // Add an event listener to the close button
-          const closeButton = document.getElementById("okey-button");
-          closeButton.addEventListener("click", function () {
-            confirmBox.style.display = "none";
-          }.bind(this));
-
-          return;
-        }
-        existingItem.quantity++;
+      }
+    });
+  },
+  incrementQuantity(item) {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existingItem = cart.find(cartItem => cartItem.dish.id === item.dish.id);
+    if (existingItem) {
+      if (existingItem.quantity >= 15) {
+        Swal.fire({
+          title: 'Quantità massima raggiunta',
+          text: 'Non puoi aggiungere più di 15 piatti.',
+          icon: 'error'
+        });
+        return;
+      }
+      existingItem.quantity++;
+      localStorage.setItem('cart', JSON.stringify(cart));
+      eventBus.emit('cart-updated');
+    }
+  },
+  decrementQuantity(item) {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existingItem = cart.find(cartItem => cartItem.dish.id === item.dish.id);
+    if (existingItem) {
+      if (existingItem.quantity > 1) {
+        existingItem.quantity--;
         localStorage.setItem('cart', JSON.stringify(cart));
         eventBus.emit('cart-updated');
-      }
-    },
-    decrementQuantity(item) {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const existingItem = cart.find(cartItem => cartItem.dish.id === item.dish.id);
-      if (existingItem) {
-        if (existingItem.quantity > 1) {
-          existingItem.quantity--;
-          localStorage.setItem('cart', JSON.stringify(cart));
-          eventBus.emit('cart-updated');
-        } else {
-          const confirmBox = document.getElementById("confirm");
-          confirmBox.style.display = "block";
-          const message = `Rimuovere ${item.dish.name} dal carrello?`;
-          document.getElementById("confirm-message").innerText = message;
-
-          // Add event listeners to the confirm box buttons
-          const yesButton = document.getElementById("yes-button");
-          const noButton = document.getElementById("no-button");
-
-          yesButton.addEventListener("click", function () {
+      } else {
+        Swal.fire({
+          title: 'Rimuovere dal carrello?',
+          text: `Rimuovere ${item.dish.name} dal carrello?`,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sì',
+          cancelButtonText: 'No'
+        }).then((result) => {
+          if (result.isConfirmed) {
             const index = cart.indexOf(existingItem);
             cart.splice(index, 1);
             localStorage.setItem('cart', JSON.stringify(cart));
             eventBus.emit('cart-updated');
-            confirmBox.style.display = "none";
-          });
-          noButton.addEventListener("click", function () {
+          } else {
             existingItem.quantity = 1;
-            confirmBox.style.display = "none";
-          });
-        }
+          }
+        });
       }
-    },
+    }
+  },
     emptyCart() {
       const confirmBox = document.getElementById("confirm");
       confirmBox.style.display = "block";

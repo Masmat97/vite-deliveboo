@@ -37,6 +37,8 @@
 
 <script>
 import { eventBus } from '@/eventBus';
+import Swal from 'sweetalert2';
+
 
 export default {
   name: 'DishCard',
@@ -48,61 +50,56 @@ export default {
   },
   methods: {
     addToCart(dish, quantity) {
-      const quantityInput = parseInt(this.$refs.quantityInput.value) || 1;
-      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const quantityInput = parseInt(this.$refs.quantityInput.value) || 1;
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-      if (quantityInput < 1 || quantityInput > 15) {
-    const message = quantityInput > 15 ? "Quantità massima raggiunta. Non puoi aggiungere più di 15 piatti." : "La quantità deve essere compresa tra 1 e 15.";
+    if (quantityInput < 1 || quantityInput > 15) {
+      Swal.fire({
+        title: 'Errore',
+        text: quantityInput > 15 ? "Quantità massima raggiunta. Non puoi aggiungere più di 15 piatti." : "La quantità deve essere compresa tra 1 e 15.",
+        icon: 'error'
+      });
+      return;
+    }
 
-    // Display the error message in a custom alert box
-    const confirmBox = document.getElementById("info");
-    document.getElementById("info-message").innerText = message;
-    confirmBox.style.display = "block";
-
-    // Add an event listener to the close button
-    const closeButton = document.getElementById("okey-button");
-    closeButton.addEventListener("click", function() {
-      confirmBox.style.display = "none";
-    }.bind(this));
-
-    return;
-  }
-
-      // Check if the cart is empty
-      if (cart.length === 0) {
-        // If empty, add the dish to the cart and set the restaurant ID
-        cart.push({
-          dish: dish,
-          quantity: quantityInput
-        });
+    // Check if the cart is empty
+    if (cart.length === 0) {
+      // If empty, add the dish to the cart and set the restaurant ID
+      cart.push({
+        dish: dish,
+        quantity: quantityInput
+      });
+      localStorage.setItem('cart', JSON.stringify(cart));
+      eventBus.emit('cart-updated');
+    } else {
+      // If not empty, check if the dish is from the same restaurant as the first dish
+      const firstDish = cart[0].dish;
+      if (dish.restaurant_id === firstDish.restaurant_id) {
+        // If same restaurant, add the dish to the cart
+        const existingDish = cart.find(item => item.dish.id === dish.id);
+        if (existingDish) {
+          existingDish.quantity += quantityInput;
+        } else {
+          cart.push({
+            dish: dish,
+            quantity: quantityInput
+          });
+        }
         localStorage.setItem('cart', JSON.stringify(cart));
         eventBus.emit('cart-updated');
       } else {
-        // If not empty, check if the dish is from the same restaurant as the first dish
-        const firstDish = cart[0].dish;
-        if (dish.restaurant_id === firstDish.restaurant_id) {
-          // If same restaurant, add the dish to the cart
-          const existingDish = cart.find(item => item.dish.id === dish.id);
-          if (existingDish) {
-            existingDish.quantity += quantityInput;
-          } else {
-            cart.push({
-              dish: dish,
-              quantity: quantityInput
-            });
-          }
-          localStorage.setItem('cart', JSON.stringify(cart));
-          eventBus.emit('cart-updated');
-        } else {
-          // If not same restaurant, display a confirmation alert
-          const confirmBox = document.getElementById("confirm");
-          const message = "Sei sicuro di voler cambiare ristorante? Il carrello precedente sarà svuotato.";
-          document.getElementById("confirm-message").innerText = message;
-
-          const yesButton = document.getElementById("yes-button");
-          const noButton = document.getElementById("no-button");
-
-          yesButton.addEventListener("click", function () {
+        // If not same restaurant, display a confirmation alert
+        Swal.fire({
+          title: 'Sei sicuro?',
+          text: "Sei sicuro di voler cambiare ristorante? Il carrello precedente sarà svuotato.",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sì',
+          cancelButtonText: 'No'
+        }).then((result) => {
+          if (result.isConfirmed) {
             // Clear the cart
             cart = [];
             localStorage.setItem('cart', JSON.stringify(cart));
@@ -115,17 +112,11 @@ export default {
             });
             localStorage.setItem('cart', JSON.stringify(cart));
             eventBus.emit('cart-updated');
-            confirmBox.style.display = "none";
-          }.bind(this));
-
-          noButton.addEventListener("click", function () {
-            confirmBox.style.display = "none";
-          });
-
-          confirmBox.style.display = "block";
-        }
+          }
+        });
       }
-    },
+    }
+  },
   }
 }
 

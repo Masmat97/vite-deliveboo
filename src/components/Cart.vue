@@ -1,5 +1,7 @@
 <script>
 import { eventBus } from '@/eventBus';
+import Swal from 'sweetalert2';
+
 
 export default {
   name: 'Cart',
@@ -12,23 +14,40 @@ export default {
   computed: {
     cartTotal() {
       return this.cart.reduce((total, item) => total + item.dish.price * item.quantity, 0).toFixed(2);
+    },
+    restaurantName() {
+    if (this.cart.length > 0) {
+      return this.restaurant.name;
+    } else {
+      return JSON.parse(localStorage.getItem('restaurant'))?.name;
     }
-  },
+  }
+},
+watch: {
+  restaurant(newValue, oldValue) {
+    if (newValue !== oldValue) {
+      this.restaurantName = newValue?.name;
+    }
+  }
+},
   methods: {
     updateCart() {
-      this.cart = JSON.parse(localStorage.getItem('cart')) || [];
-      this.restaurant = JSON.parse(localStorage.getItem('restaurant')) || null; // Aggiungi l'aggiornamento del nome del ristorante
-    },
-    removeItemFromCart(item) {
-      const confirmBox = document.getElementById("confirm");
-      confirmBox.style.display = "block";
-      const message = `Rimuovere ${item.dish.name} dal carrello?`;
-      document.getElementById("confirm-message").innerText = message;
-
-      const yesButton = document.getElementById("yes-button");
-      const noButton = document.getElementById("no-button");
-
-      yesButton.addEventListener("click", () => {
+    this.cart = JSON.parse(localStorage.getItem('cart')) || [];
+    this.restaurant = JSON.parse(localStorage.getItem('restaurant')) || null;
+    this.$forceUpdate(); // Forza l'aggiornamento della proprietà calcolata
+  },
+  removeItemFromCart(item) {
+    Swal.fire({
+      title: 'Rimuovere dal carrello?',
+      text: `Rimuovere ${item.dish.name} dal carrello?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sì',
+      cancelButtonText: 'No'
+    }).then((result) => {
+      if (result.isConfirmed) {
         const index = this.cart.findIndex(cartItem => cartItem.dish.id === item.dish.id);
         if (index !== -1) {
           this.cart.splice(index, 1);
@@ -36,66 +55,57 @@ export default {
           this.updateCart();
           eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
         }
-        confirmBox.style.display = "none";
-      });
-
-      noButton.addEventListener("click", () => {
-        confirmBox.style.display = "none";
-      });
-    },
-    incrementQuantity(item) {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const existingItem = cart.find(cartItem => cartItem.dish.id === item.dish.id);
-      if (existingItem) {
-        if (existingItem.quantity >= 15) {
-          const message = "Quantità massima raggiunta. Non puoi aggiungere più di 15 piatti.";
-          const confirmBox = document.getElementById("info");
-          document.getElementById("info-message").innerText = message;
-          confirmBox.style.display = "block";
-
-          const closeButton = document.getElementById("okey-button");
-          closeButton.addEventListener("click", () => {
-            confirmBox.style.display = "none";
-          });
-          return;
-        }
-        existingItem.quantity++;
+      }
+    });
+  },
+  incrementQuantity(item) {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existingItem = cart.find(cartItem => cartItem.dish.id === item.dish.id);
+    if (existingItem) {
+      if (existingItem.quantity >= 15) {
+        Swal.fire({
+          title: 'Quantità massima raggiunta',
+          text: 'Non puoi aggiungere più di 15 piatti.',
+          icon: 'error'
+        });
+        return;
+      }
+      existingItem.quantity++;
+      localStorage.setItem('cart', JSON.stringify(cart));
+      eventBus.emit('cart-updated');
+    }
+  },
+  decrementQuantity(item) {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existingItem = cart.find(cartItem => cartItem.dish.id === item.dish.id);
+    if (existingItem) {
+      if (existingItem.quantity > 1) {
+        existingItem.quantity--;
         localStorage.setItem('cart', JSON.stringify(cart));
         eventBus.emit('cart-updated');
-      }
-    },
-    decrementQuantity(item) {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const existingItem = cart.find(cartItem => cartItem.dish.id === item.dish.id);
-      if (existingItem) {
-        if (existingItem.quantity > 1) {
-          existingItem.quantity--;
-          localStorage.setItem('cart', JSON.stringify(cart));
-          eventBus.emit('cart-updated');
-        } else {
-          const confirmBox = document.getElementById("confirm");
-          confirmBox.style.display = "block";
-          const message = `Rimuovere ${item.dish.name} dal carrello?`;
-          document.getElementById("confirm-message").innerText = message;
-
-          const yesButton = document.getElementById("yes-button");
-          const noButton = document.getElementById("no-button");
-
-          yesButton.addEventListener("click", () => {
+      } else {
+        Swal.fire({
+          title: 'Rimuovere dal carrello?',
+          text: `Rimuovere ${item.dish.name} dal carrello?`,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sì',
+          cancelButtonText: 'No'
+        }).then((result) => {
+          if (result.isConfirmed) {
             const index = cart.indexOf(existingItem);
             cart.splice(index, 1);
             localStorage.setItem('cart', JSON.stringify(cart));
             eventBus.emit('cart-updated');
-            confirmBox.style.display = "none";
-          });
-
-          noButton.addEventListener("click", () => {
+          } else {
             existingItem.quantity = 1;
-            confirmBox.style.display = "none";
-          });
-        }
+          }
+        });
       }
-    },
+    }
+  },
     leavePage() {
       eventBus.emit('save-cart', this.cart);
     }
@@ -115,8 +125,8 @@ export default {
 <template>
   <div class="cart-container">
     <h1>Carrello</h1>
-    <p v-if="restaurant">Stai ordinando da: <h4>{{ restaurant.name }}</h4></p>
-    <div id="confirm" style="display: none;">
+    <p v-if="cart.length > 0 && restaurantName">Stai ordinando da: <h4>{{ restaurantName }}</h4></p>
+      <div id="confirm" style="display: none;">
       <p id="confirm-message"></p>
       <button class="m-1" id="yes-button">Sì</button>
       <button class="m-1" id="no-button">No</button>
