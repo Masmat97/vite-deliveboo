@@ -2,6 +2,7 @@
   <div class="cart-container">
     <h1>Carrello</h1>
     <p v-if="cart.length > 0 && restaurantName">Stai ordinando da: <h4>{{ restaurantName }}</h4></p>
+    
     <div v-if="cart.length === 0" class="empty-cart">
       <p>Il carrello è vuoto</p>
     </div>
@@ -30,11 +31,11 @@ import { eventBus } from '@/eventBus';
 import Swal from 'sweetalert2';
 
 export default {
-  name : 'Cart',
+  name: 'Cart',
   data() {
     return {
-      cart: JSON.parse(localStorage.getItem('cart')) || [],
-      restaurant: JSON.parse(localStorage.getItem('restaurant')) || null,
+      cart: [],
+      restaurant: null,
     };
   },
   computed: {
@@ -49,7 +50,7 @@ export default {
       }, 0).toFixed(2);
     },
     restaurantName() {
-      return this.restaurant?.name || JSON.parse(localStorage.getItem('restaurant'))?.name || 'N/A';
+      return this.restaurant?.name || 'N/A';
     }
   },
   methods: {
@@ -83,11 +84,7 @@ export default {
       const existingItem = this.cart.find(cartItem => cartItem.dish?.id === item.dish?.id);
       if (existingItem) {
         if (existingItem.quantity >= 15) {
-          Swal.fire({
-            title: 'Quantità massima raggiunta',
-            text: 'Non puoi aggiungere più di 15 piatti.',
-            icon: 'error'
-          });
+          Swal.fire({ title: 'Quantità massima raggiunta', text: 'Non puoi aggiungere più di 15 piatti.', icon: 'error' });
           return;
         }
         existingItem.quantity++;
@@ -107,49 +104,45 @@ export default {
         }
       }
     },
-    leavePage() {
-      eventBus.emit('save-cart', this.cart);
+    clearCart() {
+      localStorage.removeItem('cart');
+      this.cart = [];
+      eventBus.emit('cart-updated');
     }
   },
   mounted() {
+    this.clearCart(); // Svuota il carrello all'avvio
     this.updateCart();
     eventBus.on('cart-updated', this.updateCart);
-    window.addEventListener('beforeunload', this.leavePage);
   },
   beforeDestroy() {
     eventBus.off('cart-updated', this.updateCart);
-    window.removeEventListener('beforeunload', this.leavePage);
   }
-}
+};
 </script>
 
 <style scoped>
 .cart-container {
   padding: 20px;
 }
-
 .empty-cart {
   text-align: center;
   padding: 20px;
 }
-
 .cart-item {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 }
-
 .cart-item-image {
   width: 100px;
   height: 100px;
   object-fit: cover;
   margin-right: 20px;
 }
-
 .cart-item-details {
   flex: 1;
 }
-
 .cart-summary {
   margin-top: 20px;
   text-align: right;

@@ -1,57 +1,56 @@
 <template>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <div>
+    <nav class="navbar navbar-expand-sm bg-body-tertiary">
+      <div class="container-fluid">
+        <img class="logo" src="../assets/img/logo_deliveboo.png" alt="">
 
-  <nav class="navbar navbar-expand-sm bg-body-tertiary">
-    <div class="container-fluid">
-      <img class="logo" src="../assets/img/logo_deliveboo.png" alt="">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <div class="menu-mobile d-flex justify-content-between">
+              <div>
+                <span class="nav-item">
+                  <router-link to="/" @click="showLoadingScreen('home', $event)">
+                    Home
+                  </router-link>
+                </span>
 
-      <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <div class="menu-mobile d-flex justify-content-between">
-            <div>
-              <span class="nav-item">
-                <router-link to="/" @click="showLoadingScreen('home', $event)">
-                  Home
-                </router-link>
-              </span>
-
-              <span class="nav-item">
-                <router-link to="/cart" @click="showLoadingScreen('cart', $event)">
-                  <i class="fa-solid fa-cart-shopping" style="font-size: 1.5rem;"></i>
-                  <span v-if="isCartEmpty"></span>
-                  <span v-else>
-                    Carrello <span class="cart-item-count">{{ cartItemCount }}</span>
-                  </span>
-                </router-link>
-              </span>
-            </div>
-            <div>
-              <span class="nav-item"><a href="http://127.0.0.1:8000/login">Accedi</a></span>
-              <span class="nav-item"><a href="http://localhost:8000/register">Registrati</a></span>
+                <span class="nav-item">
+                  <router-link to="/cart" @click="showLoadingScreen('cart', $event)">
+                    <i class="fa-solid fa-cart-shopping" style="font-size: 1.5rem;"></i>
+                    <span v-if="isCartEmpty"></span>
+                    <span v-else>
+                      Carrello <span class="cart-item-count">{{ cartItemCount }}</span>
+                    </span>
+                  </router-link>
+                </span>
+              </div>
+              <div>
+                <span class="nav-item"><a href="http://127.0.0.1:8000/login">Accedi</a></span>
+                <span class="nav-item"><a href="http://localhost:8000/register">Registrati</a></span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </nav>
-  <LoadingScreen v-if="loading" />
+    </nav>
+    <LoadingScreen v-if="loading" />
+  </div>
 </template>
 
 <script>
-import { eventBus } from '@/eventBus';
-import LoadingScreen from './LoadingScreen.vue';
+import { eventBus } from '@/eventBus'; 
+import LoadingScreen from './LoadingScreen.vue'; 
 
 export default {
   name: 'AppHeader',
-  components: { LoadingScreen },
-
+  components: {
+    LoadingScreen
+  },
   data() {
     return {
       cartItemCount: 0,
@@ -68,12 +67,20 @@ export default {
   },
   methods: {
     updateCartItemCount() {
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
-  console.log('Cart from localStorage:', cart); // Debugging
-  this.cartItemCount = Array.isArray(cart) ? cart.reduce((total, item) => total + (Number(item.quantity) || 0), 0) : 0;
-  this.isCartEmpty = this.cartItemCount === 0;
-  console.log('Cart Item Count:', this.cartItemCount); // Debugging
-},
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    console.log('Cart from localStorage:', cart); // Debugging
+
+    // Ensure that each item has a valid quantity field, default to 1 if not available
+    this.cartItemCount = cart.reduce((total, item) => {
+      // Make sure to assign a quantity if it's missing
+      const quantity = Number(item.quantity) || 1;  // Default to 1 if quantity is missing or invalid
+      console.log('Item:', item, 'Quantity:', quantity); // Log individual items for debugging
+      return total + quantity;  // Add the quantity to the total
+    }, 0);
+
+    console.log('Total Item Count:', this.cartItemCount); // Log total count for debugging
+    this.isCartEmpty = this.cartItemCount === 0;  // Check if the cart is empty
+  },
     showLoadingScreen(type, event) {
       event.preventDefault();
       this.loading = true;
@@ -87,7 +94,7 @@ export default {
       }, 1500);
     },
   }
-}
+};
 </script>
 
 <style scoped>
@@ -99,27 +106,22 @@ nav {
   width: 100%;
   z-index: 1000;
 }
-
 a {
   padding: 0 1rem;
   color: white;
   text-decoration: none;
 }
-
 a:hover {
   text-decoration: underline;
 }
-
 .logo {
   width: 7rem;
 }
-
 img {
   width: 100%;
   object-fit: cover;
   object-position: center;
 }
-
 .navbar {
   width: 100%;
   display: flex;
@@ -132,7 +134,6 @@ img {
   transition: background-image 0.5s ease-in-out;
   border-bottom: 2px white solid;
 }
-
 .cart-item-count {
   background-color: red;
   color: white;
@@ -141,35 +142,28 @@ img {
   margin-left: 5px;
   font-size: 14px;
 }
-
 .menu-mobile {
   background-color: rgba(197, 17, 7, 0.5);
   border-radius: 1rem;
   padding: 1rem;
 }
-
 button {
   color: #bb2d3b;
   border-color: #bb2d3b;
 }
-
 @keyframes backgroundChange {
   0% {
-    background-image: url('../assets/img /pasta.png');
+    background-image: url('../assets/img/pasta.png');
   }
-
   25% {
     background-image: url('../assets/img/pizza.png');
   }
-
   50% {
     background-image: url('../assets/img/pollo.png');
   }
-
   75% {
     background-image: url('../assets/img/sushi.png');
   }
-
   100% {
     background-image: url('../assets/img/pasta.png');
   }
