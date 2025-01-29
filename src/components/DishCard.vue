@@ -12,7 +12,7 @@
         </div>
         <div class="col-6">
           <div class="input-group mb-3">
-            <input type="number" class="form-control" v-model="quantity" min="1" max="10" ref="quantityInput">
+            <input type="number" class="form-control" v-model="quantity" min="1" max="15" ref="quantityInput">
             <div class="input-group-append">
               <button class="btn btn-primary" @click="addToCart(dish, quantity)">+</button>
             </div>
@@ -22,104 +22,62 @@
       </div>
     </div>
   </div>
-  <!-- confirm box -->
-  <div id="confirm" style="display: none;">
-    <p id="confirm-message"></p>
-    <button class="m-1 btn btn-primary" id="yes-button">Sì</button>
-    <button class="m-1 btn btn-secondary" id="no-button">No</button>
-  </div>
-  <!-- alert -->
-  <div id="info" style="display: none;">
-    <p id="info-message"></p>
-    <button class="m-1 btn btn-primary" id="okey-button">Chiudi</button>
-  </div>
 </template>
 
 <script>
-import { eventBus } from '@/eventBus';
 import Swal from 'sweetalert2';
-
+import { eventBus } from '@/eventBus'; // Assicurati di importare l'eventBus
 
 export default {
   name: 'DishCard',
-  props: ['dish'],
+  props: {
+    dish: {
+      type: Object,
+      required: true,
+    }
+  },
   data() {
     return {
       quantity: 1 // Inizializza la quantità a 1
     }
   },
   methods: {
-    addToCart(dish, quantity) {
-    const quantityInput = parseInt(this.$refs.quantityInput.value) || 1;
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    addToCart(dish) {
+      const quantityInput = parseInt(this.$refs.quantityInput.value) || 1;
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    if (quantityInput < 1 || quantityInput > 15) {
-      Swal.fire({
-        title: 'Errore',
-        text: quantityInput > 15 ? "Quantità massima raggiunta. Non puoi aggiungere più di 15 piatti." : "La quantità deve essere compresa tra 1 e 15.",
-        icon: 'error'
-      });
-      return;
-    }
-
-    // Check if the cart is empty
-    if (cart.length === 0) {
-      // If empty, add the dish to the cart and set the restaurant ID
-      cart.push({
-        dish: dish,
-        quantity: quantityInput
-      });
-      localStorage.setItem('cart', JSON.stringify(cart));
-      eventBus.emit('cart-updated');
-    } else {
-      // If not empty, check if the dish is from the same restaurant as the first dish
-      const firstDish = cart[0].dish;
-      if (dish.restaurant_id === firstDish.restaurant_id) {
-        // If same restaurant, add the dish to the cart
-        const existingDish = cart.find(item => item.dish.id === dish.id);
-        if (existingDish) {
-          existingDish.quantity += quantityInput;
-        } else {
-          cart.push({
-            dish: dish,
-            quantity: quantityInput
-          });
-        }
-        localStorage.setItem('cart', JSON.stringify(cart));
-        eventBus.emit('cart-updated');
-      } else {
-        // If not same restaurant, display a confirmation alert
+      // Controlla se la quantità è valida
+      if (quantityInput < 1 || quantityInput > 15) {
         Swal.fire({
-          title: 'Sei sicuro?',
-          text: "Sei sicuro di voler cambiare ristorante? Il carrello precedente sarà svuotato.",
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Sì',
-          cancelButtonText: 'No'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            // Clear the cart
-            cart = [];
-            localStorage.setItem('cart', JSON.stringify(cart));
-            eventBus.emit('cart-updated');
-
-            // Add the new dish to the cart
-            cart.push({
-              dish: dish,
-              quantity: quantityInput
-            });
-            localStorage.setItem('cart', JSON.stringify(cart));
-            eventBus.emit('cart-updated');
-          }
+          title: 'Errore',
+          text: quantityInput > 15 ? "Quantità massima raggiunta. Non puoi aggiungere più di 15 piatti." : "La quantità deve essere compresa tra 1 e 15.",
+          icon: 'error'
         });
+        return; // Esci dalla funzione se la quantità non è valida
       }
-    }
-  },
+
+      // Controlla se il piatto è già nel carrello
+      const existingDish = cart.find(item => item.dish && item.dish.id === dish.id);
+      if (existingDish) {
+        existingDish.quantity += quantityInput; // Incrementa la quantità
+      } else {
+        cart.push({ dish, quantity: quantityInput }); // Aggiungi il piatto con quantità
+      }
+
+      // Salva il carrello nel localStorage
+      localStorage.setItem('cart', JSON.stringify(cart));
+      
+      // Emetti un evento per notificare che il carrello è stato aggiornato
+      eventBus.emit('cart-updated');
+
+      Swal.fire({
+        title: 'Aggiunto al Carrello',
+        text: `${dish.name} è stato aggiunto al carrello!`,
+        icon: 'success'
+      });
+    },
   }
 }
-
 </script>
 
 <style scoped>

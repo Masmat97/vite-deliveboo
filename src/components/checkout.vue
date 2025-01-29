@@ -2,112 +2,70 @@
   <div class="container-fluid cart-container">
     <div class="row">
       <div class="col-12 border border-danger ">
-        <h1 class="">Riepilogo Ordini</h1>
+        <h1>Riepilogo Ordini</h1>
         <p v-if="restaurant">Stai ordinando da:
-        <h4>{{ restaurant.name }}</h4>
+          <h4>{{ restaurant.name }}</h4>
         </p>
-        <div id="confirm" style="display: none;">
-          <p id="confirm-message"></p>
-          <button class="m-1" id="yes-button">Sì</button>
-          <button class="m-1" id="no-button">No</button>
-        </div>
-        <!-- alert -->
-        <div id="info" style="display: none;">
-          <p id="info-message"></p>
-          <button class="m-1 btn btn-primary" id="okey-button">Chiudi</button>
-        </div>
-
         <div class="row">
           <div class="col-md-6 col-sm-12 my-3">
             <div v-if="cart.length === 0" class="empty-cart">
               <p>Il carrello è vuoto</p>
             </div>
             <div v-else>
-              <div v-for="item in cart" :key="item.dish.id" class="cart-item">
-                <img :src="item.dish.image" class="cart-item-image" alt="Product image">
-                <div class="cart-item-details">
+              <div v-for="item in cart" :key="item.dish?.id" class="cart-item">
+                <img v-if="item.dish" :src="item.dish.image" class="cart-item-image" alt="Product image">
+                <div class="cart-item-details" v-if="item.dish">
                   <h5>{{ item.dish.name }}</h5>
-                  <p><strong>Prezzo:</strong> {{ item.dish.price }} €</p>
+                  <p><strong>Prezzo:</strong> €{{ (Number(item.dish.price) || 0).toFixed(2) }}</p>
                   <p><strong>Ingredienti:</strong> {{ item.dish.ingredient }}</p>
                   <p><strong>Quantità:</strong> {{ item.quantity }}</p>
                   <button type="button" class="btn btn-outline-primary" @click="decrementQuantity(item)">-</button>
                   <button type="button" class="btn btn-outline-primary" @click="incrementQuantity(item)">+</button>
-                  <button type="button" class="btn btn-outline-danger"
-                    @click="removeItemFromCart(item)">Rimuovi</button>
+                  <button type="button" class="btn btn-outline-danger" @click="removeItemFromCart(item)">Rimuovi</button>
                 </div>
               </div>
             </div>
           </div>
 
           <div class="col-md-6 col-sm-12 my-3">
-            <form @submit.prevent="validateForm" id="user-form" @keydown.enter.prevent="validateForm">
+            <form @submit.prevent="validateForm" id="user-form">
               <div class="form-group">
                 <label for="name">Nome:</label>
-                <input type="text" class="form-control" id="name" name="name" v-model="formData.name"
-                  :class="{ 'is-invalid': !nomeIsValid }" required>
+                <input type="text" class="form-control" id="name" v-model="formData.name" required>
               </div>
               <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" class="form-control" id="email" name="email" v-model="formData.email"
-                  :class="{ 'is-invalid': !emailIsValid }" required>
+                <input type="email" class="form-control" id="email" v-model="formData.email" required>
               </div>
               <div class="form-group">
                 <label for="address">Indirizzo:</label>
-                <input type="text" class="form-control" id="address" name="address" v-model="formData.address"
-                  :class="{ 'is-invalid': !indirizzoIsValid }" required>
+                <input type="text" class="form-control" id="address" v-model="formData.address" required>
               </div>
               <div class="form-group">
                 <label for="phone_number">Numero di telefono:</label>
-                <input type="tel" class="form-control" id="phone_number" name="phone_number"
-                  v-model="formData.phone_number" :class="{ 'is-invalid': !telefonoIsValid }" required>
+                <input type="tel" class="form-control" id="phone_number" v-model="formData.phone_number" required>
               </div>
-
               <div class="form-group">
                 <label for="numb-card">Numero carta:</label>
-                <input type="tel" class="form-control" :class="{ 'is-invalid': !telefonoIsValid }" required>
+                <input type="tel" class="form-control" v-model="formData.cardNumber" required>
               </div>
-
               <div class="form-group">
-                <label for="numb-card">Scadenza Carta:</label>
-                <div class="form-control" :class="{ 'is-invalid': !telefonoIsValid }">
-                  <select id="month" name="month" required>
-
-                    <option value="12">Dicembre</option>
-                    <option value="02">Novembre</option>
-                    <option value="02">Ottobre</option>
-                    <option value="02">Settembre</option>
-                    <option value="02">Agosto</option>
-                    <option value="02">Luglio</option>
-                    <option value="02">Giugno</option>
-                    <option value="02">Maggio</option>
-                    <option value="02">Aprile</option>
-                    <option value="02">Marzo</option>
-                    <option value="02">Febbraio</option>
-                    <option value="01">Gennaio</option>
-
+                <label for="expiry">Scadenza Carta:</label>
+                <div class="d-flex">
+                  <select v-model="formData.expiryMonth" required>
+                    <option value="" disabled>MM</option>
+                    <option v-for="month in months" :key="month" :value="month">{{ month }}</option>
                   </select>
-
-                  <select id="year" name="year" required>
-
-                    <option value="2022">2024</option>
-                    <option value="2022">2025</option>
-                    <option value="2023">2026</option>
-                    <option value="2023">2027</option>
-                    <option value="2023">2028</option>
-                    <option value="2023">2029</option>
-                    <option value="2023">2030</option>
-                    <option value="2023">2031</option>
-                    <option value="2023">2032</option>
-                    <option value="2023">2033</option>
-                    <option value="2023">2034</option>
-
+                  <select v-model="formData.expiryYear" required>
+                    <option value="" disabled>YYYY</option>
+                    <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
                   </select>
                 </div>
               </div>
               <div class="row w-100 margin">
                 <div class="col-12 rounded-3 border border-danger mt-2 mx-2">
                   <div class="p-2">
-                    <p>Total: {{ cartTotal }} €</p>
+                    <p><strong>Totale:</strong> €{{ cartTotal }} </p>
                     <button class="btn btn-primary m-0" @click="proceedToPayment">Procedi al pagamento</button>
                     <button class="btn btn-danger" @click="emptyCart">Svuota carrello</button>
                   </div>
@@ -118,227 +76,158 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
 <script>
 import { eventBus } from '@/eventBus';
-import axios from 'axios';
 import Swal from 'sweetalert2';
-
 
 export default {
   name: 'Checkout',
   data() {
     return {
       cart: [],
-      restaurant: null, // add a data property to store the restaurant
+      restaurant: null,
       formData: {
         name: '',
         email: '',
         address: '',
-        phone_number: ''
+        phone_number: '',
+        cardNumber: '',
+        expiryMonth: '',
+        expiryYear: ''
       },
-      totalCart: ''
+      months: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
+      years: Array.from({ length: 10 }, (v, k) => new Date().getFullYear() + k),
     };
   },
   computed: {
     cartTotal() {
-      this.totalCart = this.cart.reduce((total, item) => total + item.dish.price * item.quantity, 0).toFixed(2);
-      return this.totalCart;
+      return this.cart.reduce((total, item) => {
+        const price = Number(item.dish?.price) || 0; // Assicurati che price sia un numero
+        const quantity = Number(item.quantity) || 0; // Assicurati che quantity sia un numero
+        return total + (price * quantity); // Calcola il totale
+      }, 0).toFixed(2); // Restituisci il totale formattato
     }
   },
   methods: {
-
     validateForm() {
-  // Validazione del nome
-  if (this.formData.name.trim() === '') {
-    this.nomeIsValid = false
-  } else {
-    this.nomeIsValid = true
-  }
-
-  // Validazione dell'email
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-  if (!emailRegex.test(this.formData.email)) {
-    this.emailIsValid = false
-  } else {
-    this.emailIsValid = true
-  }
-
-  // Validazione dell'indirizzo
-  if (this.formData.address.trim() === '') {
-    this.indirizzoIsValid = false
-  } else {
-    this.indirizzoIsValid = true
-  }
-
-  // Validazione del numero di telefono
-  const phoneRegex = /^\d{3}-\d{3}-\d{4}$/
-  if (!phoneRegex.test(this.formData.phone_number)) {
-    this.telefonoIsValid = false
-  } else {
-    this.telefonoIsValid = true
-  }
-
-  // Validazione del numero carta
-  const cardRegex = /^\d{16}$/
-  if (!cardRegex.test(this.formData.numb_card)) {
-    this.numbCardIsValid = false
-  } else {
-    this.numbCardIsValid = true
-  }
-
-  // Se tutte le proprietà di validazione sono true, il form è valido
-  if (this.nomeIsValid && this.emailIsValid && this.indirizzoIsValid && this.telefonoIsValid && this.numbCardIsValid) {
-    // Esegui l'azione di submit del form
-    Swal.fire({
-      icon: 'success',
-      title: 'Form valido!',
-      text: 'Il tuo form è stato inviato con successo!',
-      confirmButtonText: 'OK'
-    })
-  } else {
-    Swal.fire({
-      icon: 'error',
-      title: 'Form non valido!',
-      text: 'Per favore, controlla i campi del form e riprova.',
-      confirmButtonText: 'OK'
-    })
-  }
-},
-
+      // Implementa la logica di validazione qui
+      Swal.fire({
+        icon: 'success',
+        title: 'Form valido!',
+        text: 'Il tuo form è stato inviato con successo!',
+        confirmButtonText: 'OK'
+      });
+    },
     updateCart() {
       this.cart = JSON.parse(localStorage.getItem('cart')) || [];
-      console.log(this.cart)
+      this.restaurant = JSON.parse(localStorage.getItem('restaurant')) || null;
     },
     proceedToPayment() {
-  console.log("Attempting to proceed to payment");
-  // Mostra un messaggio di conferma prima di procedere al pagamento
-  Swal.fire({
-    title: 'Conferma pagamento',
-    text: 'Sei sicuro di voler procedere al pagamento?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Sì, procedi al pagamento',
-    cancelButtonText: 'No, annulla'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // Simula una chiamata API per processare il pagamento
-      const data = [this.cart, this.formData, this.totalCart];
-      axios.post('http://127.0.0.1:8000/api/payment', data)
-        .then(response => {
-          console.log(response.data);
-          // Naviga all'URL del checkout Laravel
+      Swal.fire({
+        title: 'Conferma pagamento',
+        text: 'Sei sicuro di voler procedere al pagamento?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sì, procedi al pagamento',
+        cancelButtonText: 'No, annulla'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const data = { cart: this.cart, user: this.formData, total: this.cartTotal };
+          console.log(data);
           window.location.href = 'http://localhost:5174/thanks';
           localStorage.removeItem('cart');
           this.cart = [];
-        })
-        .catch(error => {
-          console.error("There was an error processing the payment", error);
-        });
-    }
-  });
-},
+        }
+      });
+    },
     removeItemFromCart(item) {
-    Swal.fire({
-      title: 'Rimuovere dal carrello?',
-      text: `Rimuovere ${item.dish.name} dal carrello?`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Sì',
-      cancelButtonText: 'No'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const index = this.cart.findIndex(cartItem => cartItem.dish.id === item.dish.id);
-        if (index !== -1) {
-          this.cart.splice(index, 1);
+      const index = this.cart.findIndex(cartItem => cartItem.dish.id === item.dish.id);
+      if (index !== -1) {
+        this.cart.splice(index, 1);
+        localStorage.setItem('cart', JSON.stringify(this.cart));
+        eventBus.emit('cart-updated');
+      }
+    },
+    incrementQuantity(item) {
+      const existingItem = this.cart.find(cartItem => cartItem.dish?.id === item.dish?.id);
+      if (existingItem) {
+        if (existingItem.quantity >= 15) {
+          Swal.fire({
+            title: 'Quantità massima raggiunta',
+            text: 'Non puoi aggiungere più di 15 piatti.',
+            icon: 'error'
+          });
+          return;
+        }
+        existingItem.quantity++;
+        localStorage.setItem('cart', JSON.stringify(this.cart));
+        eventBus.emit('cart-updated');
+      }
+    },
+    decrementQuantity(item) {
+      const existingItem = this.cart.find(cartItem => cartItem.dish?.id === item.dish?.id);
+      if (existingItem) {
+        if (existingItem.quantity > 1) {
+          existingItem.quantity--;
           localStorage.setItem('cart', JSON.stringify(this.cart));
-          this.updateCart();
-          eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
+          eventBus.emit('cart-updated');
+        } else {
+          this.removeItemFromCart(existingItem);
         }
       }
-    });
-  },
-  incrementQuantity(item) {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const existingItem = cart.find(cartItem => cartItem.dish.id === item.dish.id);
-    if (existingItem) {
-      if (existingItem.quantity >= 15) {
-        Swal.fire({
-          title: 'Quantità massima raggiunta',
-          text: 'Non puoi aggiungere più di 15 piatti.',
-          icon: 'error'
-        });
-        return;
-      }
-      existingItem.quantity++;
-      localStorage.setItem('cart', JSON.stringify(cart));
-      eventBus.emit('cart-updated');
-    }
-  },
-  decrementQuantity(item) {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const existingItem = cart.find(cartItem => cartItem.dish.id === item.dish.id);
-    if (existingItem) {
-      if (existingItem.quantity > 1) {
-        existingItem.quantity--;
-        localStorage.setItem('cart', JSON.stringify(cart));
-        eventBus.emit('cart-updated');
-      } else {
-        Swal.fire({
-          title: 'Rimuovere dal carrello?',
-          text: `Rimuovere ${item.dish.name} dal carrello?`,
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Sì',
-          cancelButtonText: 'No'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            const index = cart.indexOf(existingItem);
-            cart.splice(index, 1);
-            localStorage.setItem('cart', JSON.stringify(cart));
+    },
+    removeItemFromCart(item) {
+      Swal.fire({
+        title: 'Rimuovere dal carrello?',
+        text: `Rimuovere ${item.dish?.name || 'questo piatto'} dal carrello?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sì',
+        cancelButtonText: 'No'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const index = this.cart.findIndex(cartItem => cartItem.dish?.id === item.dish?.id);
+          if (index !== -1) {
+            this.cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(this.cart));
+            this.updateCart();
             eventBus.emit('cart-updated');
-          } else {
-            existingItem.quantity = 1;
           }
-        });
-      }
+        }
+      });
+    },
+    emptyCart() {
+      Swal.fire({
+        title: 'Svuota carrello',
+        text: 'Sei sicuro di voler svuotare il carrello?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sì, svuota carrello',
+        cancelButtonText: 'No, annulla'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          localStorage.removeItem('cart');
+          this.cart = [];
+          eventBus.emit('cart-updated');
+        }
+      });
     }
-  },
-  emptyCart() {
-  Swal.fire({
-    title: 'Svuota carrello',
-    text: 'Sei sicuro di voler svuotare il carrello?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Sì, svuota carrello',
-    cancelButtonText: 'No, annulla'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      localStorage.removeItem('cart');
-      this.cart = [];
-      eventBus.emit('cart-updated'); // Notifica dell'aggiornamento
-      this.restaurant = null; // Imposta il valore di restaurant a null
-    }
-  });
-},
   },
   mounted() {
     this.updateCart();
-    this.restaurant = JSON.parse(localStorage.getItem('restaurant')); // retrieve the restaurant from local storage
     eventBus.on('cart-updated', this.updateCart);
   },
   beforeDestroy() {
     eventBus.off('cart-updated', this.updateCart);
-  },
+  }
 }
 </script>
+
 <style scoped>
 select {
   background-color: white;
@@ -360,7 +249,6 @@ select {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-
 }
 
 .cart-item-image {
@@ -381,49 +269,5 @@ select {
 
 button {
   margin-left: 1rem;
-}
-
-.cart-summary {
-  margin-top: 20px;
-  text-align: right;
-}
-
-
-#confirm,
-#info {
-  position: fixed;
-  z-index: 999;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #f0f0f0;
-  border: 1px solid #fe1c1c;
-  padding: 20px;
-  display: none;
-  border-radius: 1rem;
-  text-align: center;
-}
-
-#confirm-message,
-#info-message {
-  font-size: 18px;
-  margin-bottom: 20px;
-}
-
-#yes-button,
-#no-button,
-#okey-button {
-  background-color: #fe1c1c;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-#yes-button:hover,
-#no-button:hover,
-#okey-button:hover {
-  background-color: #d110108f;
 }
 </style>
