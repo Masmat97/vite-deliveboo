@@ -1,3 +1,49 @@
+<template>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <nav class="navbar navbar-expand-sm bg-body-tertiary">
+    <div class="container-fluid">
+      <img class="logo" src="../assets/img/logo_deliveboo.png" alt="">
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <div class="menu-mobile d-flex justify-content-between">
+            <div>
+              <span class="nav-item">
+                <router-link to="/" @click="showLoadingScreen('home', $event)">
+                  Home
+                </router-link>
+              </span>
+
+              <span class="nav-item">
+                <router-link to="/cart" @click="showLoadingScreen('cart', $event)">
+                  <i class="fa-solid fa-cart-shopping" style="font-size: 1.5rem;"></i>
+                  <span v-if="isCartEmpty"></span>
+                  <span v-else>
+                    Carrello <span class="cart-item-count">{{ cartItemCount }}</span>
+                  </span>
+                </router-link>
+              </span>
+            </div>
+            <div>
+              <span class="nav-item"><a href="http://127.0.0.1:8000/login">Accedi</a></span>
+              <span class="nav-item"><a href="http://localhost:8000/register">Registrati</a></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <LoadingScreen v-if="loading" />
+</template>
+
 <script>
 import { eventBus } from '@/eventBus';
 import LoadingScreen from './LoadingScreen.vue';
@@ -10,16 +56,11 @@ export default {
     return {
       cartItemCount: 0,
       isCartEmpty: true,
-      isOpen: false,
-      restaurant: null, // add a data property to store the restaurant
       loading: false,
-
     };
   },
   mounted() {
     this.updateCartItemCount();
-    this.restaurant = JSON.parse(localStorage.getItem('restaurant')); // retrieve the restaurant from local storage
-    console.log("header",this.restaurant)
     eventBus.on('cart-updated', this.updateCartItemCount);
   },
   beforeDestroy() {
@@ -27,10 +68,12 @@ export default {
   },
   methods: {
     updateCartItemCount() {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      this.cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
-      this.isCartEmpty = this.cartItemCount === 0;
-    },
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  console.log('Cart from localStorage:', cart); // Debugging
+  this.cartItemCount = Array.isArray(cart) ? cart.reduce((total, item) => total + (Number(item.quantity) || 0), 0) : 0;
+  this.isCartEmpty = this.cartItemCount === 0;
+  console.log('Cart Item Count:', this.cartItemCount); // Debugging
+},
     showLoadingScreen(type, event) {
       event.preventDefault();
       this.loading = true;
@@ -46,60 +89,6 @@ export default {
   }
 }
 </script>
-
-<template>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-  <nav class="navbar navbar-expand-sm bg-body-tertiary">
-    <div class="container-fluid">
-
-      <img class="logo" src="../assets/img/logo_deliveboo.png" alt="">
-
-
-
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <div class="menu-mobile  d-flex justify-content-between">
-
-            <div>
-              <span class="nav-item">
-  <router-link to="/" @click="showLoadingScreen('home', $event)">
-    Home
-  </router-link>
-</span>
-
-<span class="nav-item">
-  <router-link to="/cart" @click="showLoadingScreen('cart', $event)" :restaurant="this.restaurant">
-    <i class="fa-solid fa-cart-shopping" style="font-size: 1.5rem;"></i>
-    <span v-if="isCartEmpty"></span>
-    <span v-else>
-      Carrello <span class="cart-item-count">{{ cartItemCount }}</span>
-    </span>
-  </router-link>
-</span>
-
-            </div>
-            <div>
-              <span class="nav-item"><a href="http://127.0.0.1:8000/login">Accedi</a></span>
-              <span class="nav-item"><a href="http://localhost:8000/register">Registrati</a></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </nav>
-  <LoadingScreen v-if="loading" />
-
-
-</template>
-
 
 <style scoped>
 nav {
@@ -166,7 +155,7 @@ button {
 
 @keyframes backgroundChange {
   0% {
-    background-image: url('../assets/img/pasta.png');
+    background-image: url('../assets/img /pasta.png');
   }
 
   25% {
@@ -184,6 +173,5 @@ button {
   100% {
     background-image: url('../assets/img/pasta.png');
   }
-
 }
 </style>
