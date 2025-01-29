@@ -15,7 +15,7 @@
               <div>
                 <span class="nav-item">
                   <router-link to="/" @click="showLoadingScreen('home', $event)">
-                    Home
+                    <i class="fa-solid fa-house"style="font-size: 1.5rem;"></i>
                   </router-link>
                 </span>
 
@@ -30,8 +30,8 @@
                 </span>
               </div>
               <div>
-                <span class="nav-item"><a href="http://127.0.0.1:8000/login">Accedi</a></span>
-                <span class="nav-item"><a href="http://localhost:8000/register">Registrati</a></span>
+                <!-- <span class="nav-item"><a href="http://127.0.0.1:8000/login">Accedi</a></span>
+                <span class="nav-item"><a href="http://localhost:8000/register">Registrati</a></span> -->
               </div>
             </div>
           </div>
