@@ -21,7 +21,7 @@
     </div>
     <div class="cart-summary">
       <p><b>Totale: €{{ cartTotal }} </b></p>
-      <router-link :to="{ name: 'checkout', params: { restaurant: restaurant } }" class="btn btn-primary mt-auto">Completa l'ordine</router-link>
+      <router-link :to="{ name: 'checkout', params: { cart: cart, restaurant: restaurant } }" class="btn btn-primary mt-auto">Completa l'ordine</router-link>
     </div>
   </div>
 </template>
@@ -111,7 +111,6 @@ export default {
     }
   },
   mounted() {
-    this.clearCart(); // Svuota il carrello all'avvio
     this.updateCart();
     eventBus.on('cart-updated', this.updateCart);
   },
