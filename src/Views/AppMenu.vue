@@ -27,6 +27,8 @@ export default {
 
     },
     mounted() {
+        window.scrollTo(0, 0);
+
           // Retrieve the restaurant object from local storage
     const restaurant = JSON.parse(localStorage.getItem('restaurant'));
     this.restaurant = restaurant;

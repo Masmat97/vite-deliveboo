@@ -189,7 +189,7 @@ export default {
       this.cart = []; // Svuota il carrello nel componente
 
       // Reindirizza alla pagina di ringraziamento
-      this.$router.push({ name: 'thank-you' });
+      this.$router.push({ name: 'thanks' });
     } else {
       alert('Errore nel completamento dell\'ordine.');
     }
@@ -202,6 +202,8 @@ export default {
   mounted() {
     this.updateCart(); // Update cart when component mounts
     this.initializeBraintree(); // Initialize Braintree
+    window.scrollTo(0, 0);
+
   },
 };
 </script>

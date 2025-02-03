@@ -15,13 +15,13 @@
               <div>
                 <span class="nav-item">
                   <router-link to="/" @click="showLoadingScreen('home', $event)">
-                    <i class="fa-solid fa-house"style="font-size: 1.5rem;"></i>
+                    <i class="fa-solid fa-house icon"style="font-size: 1.5rem;"></i>
                   </router-link>
                 </span>
 
                 <span class="nav-item">
                   <router-link to="/cart" @click="showLoadingScreen('cart', $event)">
-                    <i class="fa-solid fa-cart-shopping" style="font-size: 1.5rem;"></i>
+                    <i class="fa-solid fa-cart-shopping icon" style="font-size: 1.5rem;"></i>
                     <span v-if="isCartEmpty"></span>
                     <span v-else>
                       Carrello <span class="cart-item-count">{{ cartItemCount }}</span>
@@ -121,6 +121,15 @@ img {
   width: 100%;
   object-fit: cover;
   object-position: center;
+}
+
+.icon {
+  transition: transform 0.2s, color 0.2s; /* Aggiungi transizione per un effetto più fluido */
+}
+
+.icon:hover {
+  transform: scale(1.3); /* Ingrandisci l'icona al passaggio del mouse */
+  color: #ffffff; /* Cambia il colore dell'icona al passaggio del mouse */
 }
 .navbar {
   width: 100%;
